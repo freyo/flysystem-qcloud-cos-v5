@@ -14,17 +14,17 @@ use Qcloud\Cos\Exception\NoSuchKeyException;
 class Adapter extends AbstractAdapter
 {
     /**
-     * @var Client $client
+     * @var Client
      */
     protected $client;
 
     /**
-     * @var array $config
+     * @var array
      */
     protected $config = [];
 
     /**
-     * @var array $regionMap
+     * @var array
      */
     protected $regionMap = [
         'cn-east'      => 'ap-shanghai',
@@ -86,7 +86,7 @@ class Adapter extends AbstractAdapter
      */
     public function getSourcePath($path)
     {
-        return sprintf("%s-%s.cos.%s.myqcloud.com/%s",
+        return sprintf('%s-%s.cos.%s.myqcloud.com/%s',
             $this->getBucket(), $this->getAppId(), $this->getRegion(), ltrim($path, '/')
         );
     }
@@ -162,12 +162,12 @@ class Adapter extends AbstractAdapter
         $response = $this->client->copyObject([
             'Bucket'     => $this->getBucket(),
             'Key'        => $newpath,
-            'CopySource' => $source
+            'CopySource' => $source,
         ]);
 
         $this->delete($path);
 
-        return (bool)$response;
+        return (bool) $response;
     }
 
     /**
@@ -180,10 +180,10 @@ class Adapter extends AbstractAdapter
     {
         $source = $this->getSourcePath($path);
 
-        return (bool)$this->client->copyObject([
+        return (bool) $this->client->copyObject([
             'Bucket'     => $this->getBucket(),
             'Key'        => $newpath,
-            'CopySource' => $source
+            'CopySource' => $source,
         ]);
     }
 
@@ -194,9 +194,9 @@ class Adapter extends AbstractAdapter
      */
     public function delete($path)
     {
-        return (bool)$this->client->deleteObject([
+        return (bool) $this->client->deleteObject([
             'Bucket' => $this->getBucket(),
-            'Key'    => $path
+            'Key'    => $path,
         ]);
     }
 
@@ -207,9 +207,9 @@ class Adapter extends AbstractAdapter
      */
     public function deleteDir($dirname)
     {
-        return (bool)$this->client->deleteObject([
+        return (bool) $this->client->deleteObject([
             'Bucket' => $this->getBucket(),
-            'Key'    => $dirname
+            'Key'    => $dirname,
         ]);
     }
 
@@ -223,8 +223,8 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->putObject([
             'Bucket' => $this->getBucket(),
-            'Key'    => rtrim($dirname, '/') . '/_blank',
-            'Body'   => ''
+            'Key'    => rtrim($dirname, '/').'/_blank',
+            'Body'   => '',
         ]);
     }
 
@@ -239,10 +239,10 @@ class Adapter extends AbstractAdapter
         $visibility = ($visibility === AdapterInterface::VISIBILITY_PUBLIC)
             ? 'public-read' : 'private';
 
-        return (bool)$this->client->PutObjectAcl([
+        return (bool) $this->client->PutObjectAcl([
             'Bucket' => $this->getBucket(),
             'Key'    => $path,
-            'ACL'    => $visibility
+            'ACL'    => $visibility,
         ]);
     }
 
@@ -254,7 +254,7 @@ class Adapter extends AbstractAdapter
     public function has($path)
     {
         try {
-            return (bool)$this->getMetadata($path);
+            return (bool) $this->getMetadata($path);
         } catch (NoSuchKeyException $e) {
             return false;
         }
@@ -270,10 +270,10 @@ class Adapter extends AbstractAdapter
         try {
             $response = $this->client->getObject([
                 'Bucket' => $this->getBucket(),
-                'Key'    => $path
+                'Key'    => $path,
             ]);
 
-            return ['contents' => (string)$response->get('Body')];
+            return ['contents' => (string) $response->get('Body')];
         } catch (NoSuchKeyException $e) {
             return false;
         }
@@ -303,7 +303,7 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->listObjects([
             'Bucket' => $this->getBucket(),
-            'Prefix' => $directory
+            'Prefix' => $directory,
         ]);
     }
 
@@ -316,7 +316,7 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->headObject([
             'Bucket' => $this->getBucket(),
-            'Key'    => $path
+            'Key'    => $path,
         ]);
     }
 
@@ -368,7 +368,7 @@ class Adapter extends AbstractAdapter
     {
         $meta = $this->client->getObjectAcl([
             'Bucket' => $this->getBucket(),
-            'Key'    => $path
+            'Key'    => $path,
         ]);
 
         foreach ($meta->get('Grants') as $grant) {
