@@ -28,7 +28,7 @@ class ServiceProvider extends LaravelServiceProvider
 
         $this->app->make('filesystem')
                   ->extend('cosv5', function ($app, $config) {
-                      $client    = new Client($config);
+                      $client = new Client($config);
                       $flysystem = new Filesystem(new Adapter($client, $config));
 
                       $flysystem->addPlugin(new PutRemoteFile());
@@ -47,7 +47,7 @@ class ServiceProvider extends LaravelServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/filesystems.php', 'filesystems'
+            __DIR__.'/filesystems.php', 'filesystems'
         );
     }
 }

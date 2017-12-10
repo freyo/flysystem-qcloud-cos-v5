@@ -64,18 +64,18 @@ return [
         ],
 
         'cosv5' => [
-            'driver'     => 'cosv5',
-			'region'     => env('COSV5_REGION', 'cn-east'),
-			'credentials'    => [
-				'appId'      => env('COSV5_APP_ID'),
-				'secretId'   => env('COSV5_SECRET_ID'),
-				'secretKey'  => env('COSV5_SECRET_KEY'),
-				'token'      => env('COSV5_TOKEN'),
-			],
-			'timeout'            => env('COSV5_TIMEOUT', 3600),
-			'connect_timeout'    => env('COSV5_CONNECT_TIMEOUT', 3600),
-            'bucket'   => env('COSV5_BUCKET'),
-            'cdn'      => env('COSV5_CDN', 'https://bucket-appid.file.myqcloud.com'),
+            'driver'         => 'cosv5',
+            'region'         => env('COSV5_REGION', 'cn-east'),
+            'credentials'    => [
+                'appId'      => env('COSV5_APP_ID'),
+                'secretId'   => env('COSV5_SECRET_ID'),
+                'secretKey'  => env('COSV5_SECRET_KEY'),
+                'token'      => env('COSV5_TOKEN'),
+            ],
+            'timeout'            => env('COSV5_TIMEOUT', 3600),
+            'connect_timeout'    => env('COSV5_CONNECT_TIMEOUT', 3600),
+            'bucket'             => env('COSV5_BUCKET'),
+            'cdn'                => env('COSV5_CDN', 'https://bucket-appid.file.myqcloud.com'),
         ],
 
     ],
