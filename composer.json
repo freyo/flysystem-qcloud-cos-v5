@@ -32,7 +32,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Freyo\\Flysystem\\QcloudCOSv4\\ServiceProvider"
+                "Freyo\\Flysystem\\QcloudCOSv5\\ServiceProvider"
             ]
         }
     }
