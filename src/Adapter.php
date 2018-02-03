@@ -98,7 +98,13 @@ class Adapter extends AbstractAdapter
      */
     public function getUrl($path)
     {
-        return $this->client->getObjectUrl($this->getBucket(), $path);
+        if (!empty($this->config['cdn'])) {
+            return $this->applyPathPrefix($path);
+        }
+
+        return urldecode(
+            $this->client->getObjectUrl($this->getBucket(), $path)
+        );
     }
 
     /**
@@ -122,7 +128,7 @@ class Adapter extends AbstractAdapter
      */
     public function writeStream($path, $resource, Config $config)
     {
-        return $this->client->upload($this->getBucket(), $path, stream_get_contents($resource));
+        return $this->client->upload($this->getBucket(), $path, stream_get_contents($resource, -1, 0));
     }
 
     /**
@@ -207,9 +213,15 @@ class Adapter extends AbstractAdapter
      */
     public function deleteDir($dirname)
     {
-        return (bool) $this->client->deleteObject([
-            'Bucket' => $this->getBucket(),
-            'Key'    => $dirname,
+        $model = $this->listContents($dirname);
+
+        $keys = array_map(function ($item) {
+            return ['Key' => $item['Key']];
+        }, (array)$model->get('Contents'));
+
+        return (bool)$this->client->deleteObjects([
+            'Bucket'  => $this->getBucket(),
+            'Objects' => $keys,
         ]);
     }
 
