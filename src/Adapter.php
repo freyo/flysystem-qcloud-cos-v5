@@ -217,9 +217,9 @@ class Adapter extends AbstractAdapter
 
         $keys = array_map(function ($item) {
             return ['Key' => $item['Key']];
-        }, (array)$model->get('Contents'));
+        }, (array) $model->get('Contents'));
 
-        return (bool)$this->client->deleteObjects([
+        return (bool) $this->client->deleteObjects([
             'Bucket'  => $this->getBucket(),
             'Objects' => $keys,
         ]);
