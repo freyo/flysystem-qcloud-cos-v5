@@ -12,3 +12,192 @@
 This is a Flysystem adapter for the qcloud-cos-sdk-php v5.
 
 腾讯云COS对象存储 V5
+
+## Installation
+
+  ```shell
+  composer require freyo/flysystem-qcloud-cos-v5
+  ```
+
+## Bootstrap
+
+  ```php
+  <?php
+  use Freyo\Flysystem\QcloudCOSv5\Adapter;
+  use League\Flysystem\Filesystem;
+
+  include __DIR__ . '/vendor/autoload.php';
+
+  $config = [
+      'region'          => 'gz',
+      'credentials'     => [
+          'appId'     => 'your-app-id',
+          'secretId'  => 'your-secret-id',
+          'secretKey' => 'your-secret-key',
+      ],
+      'timeout'         => 60,
+      'connect_timeout' => 60,
+      'bucket'          => 'cosv5test',
+      'cdn'             => '',
+  ];
+
+  $adapter = new Adapter($config);
+  $filesystem = new Filesystem($adapter);
+  ```
+
+### API
+
+```php
+bool $flysystem->write('file.md', 'contents');
+
+bool $flysystem->writeStream('file.md', fopen('path/to/your/local/file.jpg', 'r'));
+
+bool $flysystem->update('file.md', 'new contents');
+
+bool $flysystem->updateStram('file.md', fopen('path/to/your/local/file.jpg', 'r'));
+
+bool $flysystem->rename('foo.md', 'bar.md');
+
+bool $flysystem->copy('foo.md', 'foo2.md');
+
+bool $flysystem->delete('file.md');
+
+bool $flysystem->has('file.md');
+
+string|false $flysystem->read('file.md');
+
+array $flysystem->listContents();
+
+array $flysystem->getMetadata('file.md');
+
+int $flysystem->getSize('file.md');
+
+string $flysystem->getUrl('file.md'); 
+
+string $flysystem->getMimetype('file.md');
+
+int $flysystem->getTimestamp('file.md');
+
+string $flysystem->getVisibility('file.md');
+
+bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
+```
+
+[Full API documentation.](http://flysystem.thephpleague.com/api/)
+
+## Use in Laravel
+  
+**Laravel 5.5 uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.**
+
+1. Register the service provider in `config/app.php`:
+
+  ```php
+  'providers' => [
+    // ...
+    Freyo\Flysystem\QcloudCOSv5\ServiceProvider::class,
+  ]
+  ```
+
+2. Configure `config/filesystems.php`:
+
+  ```php
+  'disks'=>[
+      // ...
+      'cosv5' => [
+            'driver' => 'cosv5',
+            'region'          => env('COSV5_REGION', 'gz'),
+            'credentials'     => [
+                'appId'     => env('COSV5_APP_ID'),
+                'secretId'  => env('COSV5_SECRET_ID'),
+                'secretKey' => env('COSV5_SECRET_KEY'),
+            ],
+            'timeout'         => env('COSV5_TIMEOUT', 60),
+            'connect_timeout' => env('COSV5_CONNECT_TIMEOUT', 60),
+            'bucket'          => env('COSV5_BUCKET'),
+            'cdn'             => env('COSV5_CDN'),
+      ],
+  ],
+  ```
+
+## Use in Lumen
+
+1. Add the following code to your `bootstrap/app.php`:
+
+  ```php
+  $app->singleton('filesystem', function ($app) {
+      $app->alias('filesystem', Illuminate\Contracts\Filesystem\Factory::class);
+      return $app->loadComponent(
+          'filesystems',
+          Illuminate\Filesystem\FilesystemServiceProvider::class,
+          'filesystem'
+      );
+  });
+  ```
+
+2. And this:
+  
+  ```php
+  $app->register(Freyo\Flysystem\QcloudCOSv5\ServiceProvider::class);
+  ```
+
+3. Configure `.env`:
+  
+  ```php
+  COSV5_APP_ID=
+  COSV5_SECRET_ID=
+  COSV5_SECRET_KEY=
+  COSV5_TIMEOUT=60
+  COSV5_CONNECT_TIMEOUT=60
+  COSV5_BUCKET=
+  COSV5_REGION=gz
+  COSV5_CDN=https://{your-bucket}-{your-app-id}.file.myqcloud.com
+  ```
+  
+### Usage
+
+```php
+$disk = Storage::disk('cosv5');
+
+// create a file
+$disk->put('avatars/1', $fileContents);
+
+// check if a file exists
+$exists = $disk->has('file.jpg');
+
+// get timestamp
+$time = $disk->lastModified('file1.jpg');
+
+// copy a file
+$disk->copy('old/file1.jpg', 'new/file1.jpg');
+
+// move a file
+$disk->move('old/file1.jpg', 'new/file1.jpg');
+
+// get file contents
+$contents = $disk->read('folder/my_file.txt');
+
+// get url
+$url = $disk->url('new/file1.jpg');
+
+// create a file from remote(plugin support)
+$disk->putRemoteFile('avatars/1', 'http://example.org/avatar.jpg');
+$disk->putRemoteFileAs('avatars/1', 'http://example.org/avatar.jpg', 'file1.jpg');
+```
+
+[Full API documentation.](https://laravel.com/api/5.5/Illuminate/Contracts/Filesystem/Cloud.html)
+
+## Region
+
+|地区|区域表示|
+|:-:|:-:|
+|上海（华东）|cn-east|
+|广州（华南）|cn-sorth|
+|北京一区（华北）|cn-north|
+|成都（西南）|cn-southwest / cd|
+|新加坡|sg / sgp|
+|天津|tj|
+|北京|bj|
+|上海|sh|
+|广州（华南）|gz|
+
+[Documentation](https://cloud.tencent.com/document/product/436/6224)
