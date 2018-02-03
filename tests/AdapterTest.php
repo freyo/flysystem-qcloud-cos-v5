@@ -13,11 +13,11 @@ class AdapterTest extends TestCase
     public function Provider()
     {
         $config = [
-            'region'          => 'cd',
+            'region'          => 'gz',
             'credentials'     => [
-                'appId'     => 'your-app-id',
-                'secretId'  => 'your-secret-id',
-                'secretKey' => 'your-secret-key',
+                'appId'     => '',
+                'secretId'  => '',
+                'secretKey' => '',
             ],
             'timeout'         => 10,
             'connect_timeout' => 10,
@@ -36,8 +36,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testWrite(AdapterInterface $adapter)
     {
@@ -46,8 +45,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testWriteStream(AdapterInterface $adapter)
     {
@@ -59,8 +57,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testUpdate(AdapterInterface $adapter)
     {
@@ -69,8 +66,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testUpdateStream(AdapterInterface $adapter)
     {
@@ -82,8 +78,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testRename(AdapterInterface $adapter)
     {
@@ -92,8 +87,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testCopy(AdapterInterface $adapter)
     {
@@ -102,8 +96,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testDelete(AdapterInterface $adapter)
     {
@@ -112,8 +105,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testCreateDir(AdapterInterface $adapter)
     {
@@ -122,8 +114,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testDeleteDir(AdapterInterface $adapter)
     {
@@ -132,8 +123,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testSetVisibility(AdapterInterface $adapter)
     {
@@ -142,8 +132,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testHas(AdapterInterface $adapter)
     {
@@ -152,8 +141,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testRead(AdapterInterface $adapter)
     {
@@ -188,8 +176,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testListContents(AdapterInterface $adapter)
     {
@@ -198,8 +185,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testGetMetadata(AdapterInterface $adapter)
     {
@@ -208,8 +194,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testGetSize(AdapterInterface $adapter)
     {
@@ -218,8 +203,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testGetMimetype(AdapterInterface $adapter)
     {
@@ -228,8 +212,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testGetTimestamp(AdapterInterface $adapter)
     {
@@ -238,8 +221,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
+     * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
     public function testGetVisibility(AdapterInterface $adapter)
     {
