@@ -164,7 +164,7 @@ class AdapterTest extends TestCase
      * @dataProvider Provider
      * @deprecated
      */
-    public function testReadStream($adapter)
+    public function testReadStream(AdapterInterface $adapter)
     {
         $this->assertSame(
             stream_get_contents(fopen($adapter->getUrl('foo/bar.md'), 'r')),
@@ -176,7 +176,7 @@ class AdapterTest extends TestCase
      * @dataProvider Provider
      * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
-    public function testListContents($adapter)
+    public function testListContents(AdapterInterface $adapter)
     {
         $this->assertArrayHasKey('Contents', $adapter->listContents('foo'));
     }
@@ -185,7 +185,7 @@ class AdapterTest extends TestCase
      * @dataProvider Provider
      * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
-    public function testGetMetadata($adapter)
+    public function testGetMetadata(AdapterInterface $adapter)
     {
         $this->assertArrayHasKey('ContentLength', $adapter->getMetadata('foo/bar.md'));
     }
@@ -194,7 +194,7 @@ class AdapterTest extends TestCase
      * @dataProvider Provider
      * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
-    public function testGetSize($adapter)
+    public function testGetSize(AdapterInterface $adapter)
     {
         $this->assertArrayHasKey('size', $adapter->getSize('foo/bar.md'));
     }
@@ -203,7 +203,7 @@ class AdapterTest extends TestCase
      * @dataProvider Provider
      * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
-    public function testGetMimetype($adapter)
+    public function testGetMimetype(AdapterInterface $adapter)
     {
         $this->assertNotSame(['mimetype' => ''], $adapter->getMimetype('foo/bar.md'));
     }
@@ -212,7 +212,7 @@ class AdapterTest extends TestCase
      * @dataProvider Provider
      * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
-    public function testGetTimestamp($adapter)
+    public function testGetTimestamp(AdapterInterface $adapter)
     {
         $this->assertNotSame(['timestamp' => 0], $adapter->getTimestamp('foo/bar.md'));
     }
@@ -221,7 +221,7 @@ class AdapterTest extends TestCase
      * @dataProvider Provider
      * @expectedException \Qcloud\Cos\Exception\ServiceResponseException
      */
-    public function testGetVisibility($adapter)
+    public function testGetVisibility(AdapterInterface $adapter)
     {
         $this->assertSame(['visibility' => 'private'], $adapter->getVisibility('foo/copy.md'));
     }
