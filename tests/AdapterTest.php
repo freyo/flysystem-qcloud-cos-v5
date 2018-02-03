@@ -15,9 +15,9 @@ class AdapterTest extends TestCase
         $config = [
             'region'          => 'cd',
             'credentials'     => [
-                'appId'     => '',
-                'secretId'  => '',
-                'secretKey' => '',
+                'appId'     => 'your-app-id',
+                'secretId'  => 'your-secret-id',
+                'secretKey' => 'your-secret-key',
             ],
             'timeout'         => 10,
             'connect_timeout' => 10,
