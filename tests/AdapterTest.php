@@ -40,7 +40,7 @@ class AdapterTest extends TestCase
      */
     public function testWrite(AdapterInterface $adapter)
     {
-        $this->assertTrue((bool)$adapter->write('foo/foo.md', 'content', new Config()));
+        $this->assertTrue((bool) $adapter->write('foo/foo.md', 'content', new Config()));
     }
 
     /**
@@ -50,8 +50,8 @@ class AdapterTest extends TestCase
     public function testWriteStream(AdapterInterface $adapter)
     {
         $temp = tmpfile();
-        fwrite($temp, "writing to tempfile");
-        $this->assertTrue((bool)$adapter->writeStream('foo/bar.md', $temp, new Config()));
+        fwrite($temp, 'writing to tempfile');
+        $this->assertTrue((bool) $adapter->writeStream('foo/bar.md', $temp, new Config()));
         fclose($temp);
     }
 
@@ -61,7 +61,7 @@ class AdapterTest extends TestCase
      */
     public function testUpdate(AdapterInterface $adapter)
     {
-        $this->assertTrue((bool)$adapter->update('foo/bar.md', uniqid(), new Config()));
+        $this->assertTrue((bool) $adapter->update('foo/bar.md', uniqid(), new Config()));
     }
 
     /**
@@ -150,6 +150,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
+     *
      * @deprecated
      */
     public function testGetUrl(AdapterInterface $adapter, $config)
@@ -162,6 +163,7 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
+     *
      * @deprecated
      */
     public function testReadStream($adapter)
