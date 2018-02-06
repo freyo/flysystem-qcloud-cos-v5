@@ -13,6 +13,14 @@ This is a Flysystem adapter for the qcloud-cos-sdk-php v5.
 
 腾讯云COS对象存储 V5
 
+## Attention
+
+JSON API 接口与标准 XML 的 API 底层架构相同，数据互通，可以交叉使用，但是接口不兼容，域名不一致。
+
+腾讯云 COS 的 XML API 服务推出后，推荐您使用 XML API 接口， JSON API 接口日后将保持维护状态，可以正常使用但是不发展新特性。
+
+COS 的可用地域（Region）请参见 [#Region](#region)
+
 ## Installation
 
   ```shell
@@ -37,8 +45,8 @@ This is a Flysystem adapter for the qcloud-cos-sdk-php v5.
       ],
       'timeout'         => 60,
       'connect_timeout' => 60,
-      'bucket'          => 'cosv5test',
-      'cdn'             => '',
+      'bucket'          => 'your-bucket-name',
+      'cdn'             => '', // https://{your-bucket}-{your-app-id}.file.myqcloud.com
   ];
 
   $adapter = new Adapter($config);
@@ -150,7 +158,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
   COSV5_CONNECT_TIMEOUT=60
   COSV5_BUCKET=
   COSV5_REGION=gz
-  COSV5_CDN=https://{your-bucket}-{your-app-id}.file.myqcloud.com
+  COSV5_CDN= #https://{your-bucket}-{your-app-id}.file.myqcloud.com
   ```
   
 ### Usage
@@ -200,4 +208,4 @@ $disk->putRemoteFileAs('avatars/1', 'http://example.org/avatar.jpg', 'file1.jpg'
 |上海|sh|
 |广州（华南）|gz|
 
-[Documentation](https://cloud.tencent.com/document/product/436/6224)
+[Official Documentation](https://cloud.tencent.com/document/product/436/6224)
