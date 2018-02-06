@@ -198,12 +198,11 @@ $disk->putRemoteFileAs('avatars/1', 'http://example.org/avatar.jpg', 'file1.jpg'
 
 |地区|区域表示|AP|
 |:-:|:-:|:-:|
-|上海（华东）|cn-east|ap-shanghai|
+|上海（华东）|cn-east / sh|ap-shanghai|
 |广州（华南）|cn-sorth / gz|ap-guangzhou|
 |天津（华北）|cn-north / tj|ap-beijing-1|
 |成都（西南）|cn-southwest / cd|ap-chengdu|
 |新加坡|sg / sgp|ap-singapore|
 |北京|bj|ap-beijing|
-|上海|sh|ap-shanghai|
 
 [Official Documentation](https://cloud.tencent.com/document/product/436/6224)
