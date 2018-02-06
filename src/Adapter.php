@@ -235,7 +235,7 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->putObject([
             'Bucket' => $this->getBucket(),
-            'Key'    => $dirname . '/_blank',
+            'Key'    => $dirname.'/_blank',
             'Body'   => '',
         ]);
     }
@@ -315,7 +315,7 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->listObjects([
             'Bucket'    => $this->getBucket(),
-            'Prefix'    => $directory . '/',
+            'Prefix'    => $directory.'/',
             'Delimiter' => $recursive ? '' : '/',
         ])->toArray();
     }
