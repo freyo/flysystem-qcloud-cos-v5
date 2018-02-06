@@ -314,8 +314,9 @@ class Adapter extends AbstractAdapter
     public function listContents($directory = '', $recursive = false)
     {
         return $this->client->listObjects([
-            'Bucket' => $this->getBucket(),
-            'Prefix' => $directory,
+            'Bucket'    => $this->getBucket(),
+            'Prefix'    => rtrim($directory, '/') . '/',
+            'Delimiter' => $recursive ? '' : '/',
         ]);
     }
 
