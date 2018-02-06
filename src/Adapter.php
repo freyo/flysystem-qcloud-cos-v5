@@ -87,7 +87,7 @@ class Adapter extends AbstractAdapter
     public function getSourcePath($path)
     {
         return sprintf('%s-%s.cos.%s.myqcloud.com/%s',
-            $this->getBucket(), $this->getAppId(), $this->getRegion(), ltrim($path, '/')
+            $this->getBucket(), $this->getAppId(), $this->getRegion(), $path
         );
     }
 
@@ -235,7 +235,7 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->putObject([
             'Bucket' => $this->getBucket(),
-            'Key'    => rtrim($dirname, '/').'/_blank',
+            'Key'    => $dirname . '/_blank',
             'Body'   => '',
         ]);
     }
@@ -315,7 +315,7 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->listObjects([
             'Bucket'    => $this->getBucket(),
-            'Prefix'    => rtrim($directory, '/') . '/',
+            'Prefix'    => $directory . '/',
             'Delimiter' => $recursive ? '' : '/',
         ]);
     }

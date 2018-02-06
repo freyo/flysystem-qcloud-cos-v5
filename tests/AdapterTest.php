@@ -169,7 +169,7 @@ class AdapterTest extends TestCase
     public function testReadStream(AdapterInterface $adapter)
     {
         $this->assertSame(
-            stream_get_contents(fopen($adapter->getUrl('foo/bar.md'), 'r')),
+            stream_get_contents(fopen($adapter->getUrl('foo/bar.md'), 'rb', false)),
             stream_get_contents($adapter->readStream('foo/bar.md')['stream'])
         );
     }
