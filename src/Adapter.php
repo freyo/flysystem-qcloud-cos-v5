@@ -213,11 +213,11 @@ class Adapter extends AbstractAdapter
      */
     public function deleteDir($dirname)
     {
-        $model = $this->listContents($dirname);
+        $response = $this->listContents($dirname);
 
         $keys = array_map(function ($item) {
             return ['Key' => $item['Key']];
-        }, (array) $model->get('Contents'));
+        }, (array) $response['Contents']);
 
         return (bool) $this->client->deleteObjects([
             'Bucket'  => $this->getBucket(),
@@ -299,7 +299,7 @@ class Adapter extends AbstractAdapter
     public function readStream($path)
     {
         try {
-            return ['stream' => fopen($this->getUrl($path), 'r')];
+            return ['stream' => fopen($this->getUrl($path), 'rb', false)];
         } catch (NoSuchKeyException $e) {
             return false;
         }
@@ -317,7 +317,7 @@ class Adapter extends AbstractAdapter
             'Bucket'    => $this->getBucket(),
             'Prefix'    => $directory . '/',
             'Delimiter' => $recursive ? '' : '/',
-        ]);
+        ])->toArray();
     }
 
     /**
@@ -330,7 +330,7 @@ class Adapter extends AbstractAdapter
         return $this->client->headObject([
             'Bucket' => $this->getBucket(),
             'Key'    => $path,
-        ]);
+        ])->toArray();
     }
 
     /**
@@ -342,8 +342,8 @@ class Adapter extends AbstractAdapter
     {
         $meta = $this->getMetadata($path);
 
-        return $meta->hasKey('ContentLength')
-            ? ['size' => $meta->get('ContentLength')] : false;
+        return isset($meta['ContentLength'])
+            ? ['size' => $meta['ContentLength']] : false;
     }
 
     /**
@@ -355,8 +355,8 @@ class Adapter extends AbstractAdapter
     {
         $meta = $this->getMetadata($path);
 
-        return $meta->hasKey('ContentType')
-            ? ['mimetype' => $meta->get('ContentType')] : false;
+        return isset($meta['ContentType'])
+            ? ['mimetype' => $meta['ContentType']] : false;
     }
 
     /**
@@ -368,8 +368,8 @@ class Adapter extends AbstractAdapter
     {
         $meta = $this->getMetadata($path);
 
-        return $meta->hasKey('LastModified')
-            ? ['timestamp' => strtotime($meta->get('LastModified'))] : false;
+        return isset($meta['LastModified'])
+            ? ['timestamp' => strtotime($meta['LastModified'])] : false;
     }
 
     /**
