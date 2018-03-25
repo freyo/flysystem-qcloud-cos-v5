@@ -75,7 +75,7 @@ return [
             'timeout'            => env('COSV5_TIMEOUT', 3600),
             'connect_timeout'    => env('COSV5_CONNECT_TIMEOUT', 3600),
             'bucket'             => env('COSV5_BUCKET'),
-            'cdn'                => env('COSV5_CDN', 'https://bucket-appid.file.myqcloud.com'),
+            'cdn'                => env('COSV5_CDN'),
         ],
 
     ],
