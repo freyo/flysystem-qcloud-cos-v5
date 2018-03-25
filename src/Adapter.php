@@ -2,6 +2,7 @@
 
 namespace Freyo\Flysystem\QcloudCOSv5;
 
+use Carbon\Carbon;
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
@@ -104,6 +105,21 @@ class Adapter extends AbstractAdapter
 
         return urldecode(
             $this->client->getObjectUrl($this->getBucket(), $path)
+        );
+    }
+
+    /**
+     * @param  string             $path
+     * @param  \DateTimeInterface $expiration
+     * @param  array              $options
+     *
+     * @return string
+     */
+    public function getTemporaryUrl($path, $expiration, array $options = [])
+    {
+        return urldecode(
+            $this->client->getObjectUrl(
+                $this->getBucket(), $path, Carbon::now()->diffInSeconds($expiration), $options)
         );
     }
 
