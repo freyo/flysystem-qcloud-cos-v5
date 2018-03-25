@@ -127,6 +127,19 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
   ],
   ```
 
+3. Configure `.env`:
+  
+  ```php
+  COSV5_APP_ID=
+  COSV5_SECRET_ID=
+  COSV5_SECRET_KEY=
+  COSV5_TIMEOUT=60
+  COSV5_CONNECT_TIMEOUT=60
+  COSV5_BUCKET=
+  COSV5_REGION=gz
+  COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
+  ```
+
 ## Use in Lumen
 
 1. Add the following code to your `bootstrap/app.php`:
@@ -158,9 +171,9 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
   COSV5_CONNECT_TIMEOUT=60
   COSV5_BUCKET=
   COSV5_REGION=gz
-  COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
+  COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
   ```
-  
+
 ### Usage
 
 ```php
