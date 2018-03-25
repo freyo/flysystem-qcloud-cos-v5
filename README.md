@@ -158,7 +158,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
   COSV5_CONNECT_TIMEOUT=60
   COSV5_BUCKET=
   COSV5_REGION=gz
-  COSV5_CDN= #https://{your-bucket}-{your-app-id}.file.myqcloud.com
+  COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
   ```
   
 ### Usage
