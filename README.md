@@ -46,7 +46,7 @@ COS 的可用地域（Region）请参见 [#Region](#region)
       'timeout'         => 60,
       'connect_timeout' => 60,
       'bucket'          => 'your-bucket-name',
-      'cdn'             => '', // https://{your-bucket}-{your-app-id}.file.myqcloud.com
+      'cdn'             => '', // default: https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
   ];
 
   $adapter = new Adapter($config);
