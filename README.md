@@ -82,6 +82,8 @@ int $flysystem->getSize('file.md');
 
 string $flysystem->getUrl('file.md'); 
 
+string $flysystem->getTemporaryUrl('file.md', date_create('2018-12-31 18:12:31')); 
+
 string $flysystem->getMimetype('file.md');
 
 int $flysystem->getTimestamp('file.md');
@@ -199,6 +201,7 @@ $contents = $disk->read('folder/my_file.txt');
 
 // get url
 $url = $disk->url('new/file1.jpg');
+$temporaryUrl = $disk->temporaryUrl('new/file1.jpg', Carbon::now()->addMinutes(5));
 
 // create a file from remote(plugin support)
 $disk->putRemoteFile('avatars/1', 'http://example.org/avatar.jpg');
