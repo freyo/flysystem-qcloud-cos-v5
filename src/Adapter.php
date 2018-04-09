@@ -110,9 +110,9 @@ class Adapter extends AbstractAdapter
     }
 
     /**
-     * @param  string             $path
-     * @param  \DateTimeInterface $expiration
-     * @param  array              $options
+     * @param string             $path
+     * @param \DateTimeInterface $expiration
+     * @param array              $options
      *
      * @return string
      */
@@ -191,7 +191,7 @@ class Adapter extends AbstractAdapter
 
         $this->delete($path);
 
-        return (bool)$response;
+        return (bool) $response;
     }
 
     /**
@@ -204,7 +204,7 @@ class Adapter extends AbstractAdapter
     {
         $source = $this->getSourcePath($path);
 
-        return (bool)$this->client->copyObject([
+        return (bool) $this->client->copyObject([
             'Bucket'     => $this->getBucket(),
             'Key'        => $newpath,
             'CopySource' => $source,
@@ -218,7 +218,7 @@ class Adapter extends AbstractAdapter
      */
     public function delete($path)
     {
-        return (bool)$this->client->deleteObject([
+        return (bool) $this->client->deleteObject([
             'Bucket' => $this->getBucket(),
             'Key'    => $path,
         ]);
@@ -235,9 +235,9 @@ class Adapter extends AbstractAdapter
 
         $keys = array_map(function ($item) {
             return ['Key' => $item['Key']];
-        }, (array)$response['Contents']);
+        }, (array) $response['Contents']);
 
-        return (bool)$this->client->deleteObjects([
+        return (bool) $this->client->deleteObjects([
             'Bucket'  => $this->getBucket(),
             'Objects' => $keys,
         ]);
@@ -253,7 +253,7 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->putObject([
             'Bucket' => $this->getBucket(),
-            'Key'    => $dirname . '/_blank',
+            'Key'    => $dirname.'/_blank',
             'Body'   => '',
         ]);
     }
@@ -269,7 +269,7 @@ class Adapter extends AbstractAdapter
         $visibility = ($visibility === AdapterInterface::VISIBILITY_PUBLIC)
             ? 'public-read' : 'private';
 
-        return (bool)$this->client->PutObjectAcl([
+        return (bool) $this->client->PutObjectAcl([
             'Bucket' => $this->getBucket(),
             'Key'    => $path,
             'ACL'    => $visibility,
@@ -284,7 +284,7 @@ class Adapter extends AbstractAdapter
     public function has($path)
     {
         try {
-            return (bool)$this->getMetadata($path);
+            return (bool) $this->getMetadata($path);
         } catch (NoSuchKeyException $e) {
             return false;
         }
@@ -303,7 +303,7 @@ class Adapter extends AbstractAdapter
                 'Key'    => $path,
             ]);
 
-            return ['contents' => (string)$response->get('Body')];
+            return ['contents' => (string) $response->get('Body')];
         } catch (NoSuchKeyException $e) {
             return false;
         }
@@ -335,11 +335,11 @@ class Adapter extends AbstractAdapter
 
         $response = $this->client->listObjects([
             'Bucket'    => $this->getBucket(),
-            'Prefix'    => ((string)$directory === '') ? '' : (trim($directory, '/') . '/'),
+            'Prefix'    => ((string) $directory === '') ? '' : (trim($directory, '/').'/'),
             'Delimiter' => $recursive ? '' : '/',
         ]);
 
-        foreach ((array)$response->get('Contents') as $content) {
+        foreach ((array) $response->get('Contents') as $content) {
             $list[] = $this->normalizeFileInfo($content);
         }
 
@@ -432,14 +432,14 @@ class Adapter extends AbstractAdapter
         $path = pathinfo($content['Key']);
 
         return [
-            "type"      => "file",
-            "path"      => $content['Key'],
-            "timestamp" => Carbon::parse($content['LastModified'])->getTimestamp(),
-            "size"      => (int)$content['Size'],
-            "dirname"   => (string)$path['dirname'],
-            "basename"  => (string)$path['basename'],
-            "extension" => isset($path['extension']) ? $path['extension'] : '',
-            "filename"  => (string)$path['filename'],
+            'type'      => 'file',
+            'path'      => $content['Key'],
+            'timestamp' => Carbon::parse($content['LastModified'])->getTimestamp(),
+            'size'      => (int) $content['Size'],
+            'dirname'   => (string) $path['dirname'],
+            'basename'  => (string) $path['basename'],
+            'extension' => isset($path['extension']) ? $path['extension'] : '',
+            'filename'  => (string) $path['filename'],
         ];
     }
 }
