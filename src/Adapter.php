@@ -2,6 +2,7 @@
 
 namespace Freyo\Flysystem\QcloudCOSv5;
 
+use Carbon\Carbon;
 use DateTimeInterface;
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\AdapterInterface;
@@ -28,25 +29,25 @@ class Adapter extends AbstractAdapter
      * @var array
      */
     protected $regionMap = [
-        'cn-east' => 'ap-shanghai',
-        'cn-sorth' => 'ap-guangzhou',
-        'cn-north' => 'ap-beijing-1',
-        'cn-south-2' => 'ap-guangzhou-2',
+        'cn-east'      => 'ap-shanghai',
+        'cn-sorth'     => 'ap-guangzhou',
+        'cn-north'     => 'ap-beijing-1',
+        'cn-south-2'   => 'ap-guangzhou-2',
         'cn-southwest' => 'ap-chengdu',
-        'sg' => 'ap-singapore',
-        'tj' => 'ap-beijing-1',
-        'bj' => 'ap-beijing',
-        'sh' => 'ap-shanghai',
-        'gz' => 'ap-guangzhou',
-        'cd' => 'ap-chengdu',
-        'sgp' => 'ap-singapore',
+        'sg'           => 'ap-singapore',
+        'tj'           => 'ap-beijing-1',
+        'bj'           => 'ap-beijing',
+        'sh'           => 'ap-shanghai',
+        'gz'           => 'ap-guangzhou',
+        'cd'           => 'ap-chengdu',
+        'sgp'          => 'ap-singapore',
     ];
 
     /**
      * Adapter constructor.
      *
      * @param Client $client
-     * @param array $config
+     * @param array  $config
      */
     public function __construct(Client $client, array $config)
     {
@@ -109,9 +110,9 @@ class Adapter extends AbstractAdapter
     }
 
     /**
-     * @param  string $path
+     * @param  string             $path
      * @param  \DateTimeInterface $expiration
-     * @param  array $options
+     * @param  array              $options
      *
      * @return string
      */
@@ -137,9 +138,9 @@ class Adapter extends AbstractAdapter
     }
 
     /**
-     * @param string $path
+     * @param string   $path
      * @param resource $resource
-     * @param Config $config
+     * @param Config   $config
      *
      * @return array|bool
      */
@@ -161,9 +162,9 @@ class Adapter extends AbstractAdapter
     }
 
     /**
-     * @param string $path
+     * @param string   $path
      * @param resource $resource
-     * @param Config $config
+     * @param Config   $config
      *
      * @return array|bool
      */
@@ -183,8 +184,8 @@ class Adapter extends AbstractAdapter
         $source = $this->getSourcePath($path);
 
         $response = $this->client->copyObject([
-            'Bucket' => $this->getBucket(),
-            'Key' => $newpath,
+            'Bucket'     => $this->getBucket(),
+            'Key'        => $newpath,
             'CopySource' => $source,
         ]);
 
@@ -204,8 +205,8 @@ class Adapter extends AbstractAdapter
         $source = $this->getSourcePath($path);
 
         return (bool)$this->client->copyObject([
-            'Bucket' => $this->getBucket(),
-            'Key' => $newpath,
+            'Bucket'     => $this->getBucket(),
+            'Key'        => $newpath,
             'CopySource' => $source,
         ]);
     }
@@ -219,7 +220,7 @@ class Adapter extends AbstractAdapter
     {
         return (bool)$this->client->deleteObject([
             'Bucket' => $this->getBucket(),
-            'Key' => $path,
+            'Key'    => $path,
         ]);
     }
 
@@ -237,7 +238,7 @@ class Adapter extends AbstractAdapter
         }, (array)$response['Contents']);
 
         return (bool)$this->client->deleteObjects([
-            'Bucket' => $this->getBucket(),
+            'Bucket'  => $this->getBucket(),
             'Objects' => $keys,
         ]);
     }
@@ -252,8 +253,8 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->putObject([
             'Bucket' => $this->getBucket(),
-            'Key' => $dirname . '/_blank',
-            'Body' => '',
+            'Key'    => $dirname . '/_blank',
+            'Body'   => '',
         ]);
     }
 
@@ -270,8 +271,8 @@ class Adapter extends AbstractAdapter
 
         return (bool)$this->client->PutObjectAcl([
             'Bucket' => $this->getBucket(),
-            'Key' => $path,
-            'ACL' => $visibility,
+            'Key'    => $path,
+            'ACL'    => $visibility,
         ]);
     }
 
@@ -299,7 +300,7 @@ class Adapter extends AbstractAdapter
         try {
             $response = $this->client->getObject([
                 'Bucket' => $this->getBucket(),
-                'Key' => $path,
+                'Key'    => $path,
             ]);
 
             return ['contents' => (string)$response->get('Body')];
@@ -324,7 +325,7 @@ class Adapter extends AbstractAdapter
 
     /**
      * @param string $directory
-     * @param bool $recursive
+     * @param bool   $recursive
      *
      * @return array|bool
      */
@@ -332,14 +333,13 @@ class Adapter extends AbstractAdapter
     {
         $list = [];
 
-        $result = $this->client->listObjects([
-            'Bucket' => $this->getBucket(),
-            'Prefix' => $directory . '/',
+        $response = $this->client->listObjects([
+            'Bucket'    => $this->getBucket(),
+            'Prefix'    => $directory,
             'Delimiter' => $recursive ? '' : '/',
-        ])->toArray();
+        ]);
 
-        $contents = isset($result['Contents']) ? $result['Contents'] : [];
-        foreach ($contents as $content) {
+        foreach ((array)$response->get('Contents') as $content) {
             $list[] = $this->normalizeFileInfo($content);
         }
 
@@ -355,7 +355,7 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->headObject([
             'Bucket' => $this->getBucket(),
-            'Key' => $path,
+            'Key'    => $path,
         ])->toArray();
     }
 
@@ -407,7 +407,7 @@ class Adapter extends AbstractAdapter
     {
         $meta = $this->client->getObjectAcl([
             'Bucket' => $this->getBucket(),
-            'Key' => $path,
+            'Key'    => $path,
         ]);
 
         foreach ($meta->get('Grants') as $grant) {
@@ -422,13 +422,24 @@ class Adapter extends AbstractAdapter
         return ['visibility' => AdapterInterface::VISIBILITY_PRIVATE];
     }
 
+    /**
+     * @param array $content
+     *
+     * @return array
+     */
     private function normalizeFileInfo(array $content)
     {
+        $path = pathinfo($content['Key']);
+
         return [
-            'type' => 'file',
-            'path' => $content['Key'],
-            'timestamp' => \Carbon\Carbon::parse($content['LastModified'])->timestamp,
-            'size' => (int)$content['Size'],
+            "type"      => "file",
+            "path"      => $content['Key'],
+            "timestamp" => Carbon::parse($content['LastModified'])->getTimestamp(),
+            "size"      => (int)$content['Size'],
+            "dirname"   => (string)$path['dirname'],
+            "basename"  => (string)$path['basename'],
+            "extension" => (string)$path['extension'],
+            "filename"  => (string)$path['filename'],
         ];
     }
 }
