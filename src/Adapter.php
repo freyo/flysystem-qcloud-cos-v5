@@ -438,7 +438,7 @@ class Adapter extends AbstractAdapter
             "size"      => (int)$content['Size'],
             "dirname"   => (string)$path['dirname'],
             "basename"  => (string)$path['basename'],
-            "extension" => (string)$path['extension'],
+            "extension" => isset($path['extension']) ? $path['extension'] : '',
             "filename"  => (string)$path['filename'],
         ];
     }
