@@ -28,25 +28,25 @@ class Adapter extends AbstractAdapter
      * @var array
      */
     protected $regionMap = [
-        'cn-east'      => 'ap-shanghai',
-        'cn-sorth'     => 'ap-guangzhou',
-        'cn-north'     => 'ap-beijing-1',
-        'cn-south-2'   => 'ap-guangzhou-2',
+        'cn-east' => 'ap-shanghai',
+        'cn-sorth' => 'ap-guangzhou',
+        'cn-north' => 'ap-beijing-1',
+        'cn-south-2' => 'ap-guangzhou-2',
         'cn-southwest' => 'ap-chengdu',
-        'sg'           => 'ap-singapore',
-        'tj'           => 'ap-beijing-1',
-        'bj'           => 'ap-beijing',
-        'sh'           => 'ap-shanghai',
-        'gz'           => 'ap-guangzhou',
-        'cd'           => 'ap-chengdu',
-        'sgp'          => 'ap-singapore',
+        'sg' => 'ap-singapore',
+        'tj' => 'ap-beijing-1',
+        'bj' => 'ap-beijing',
+        'sh' => 'ap-shanghai',
+        'gz' => 'ap-guangzhou',
+        'cd' => 'ap-chengdu',
+        'sgp' => 'ap-singapore',
     ];
 
     /**
      * Adapter constructor.
      *
      * @param Client $client
-     * @param array  $config
+     * @param array $config
      */
     public function __construct(Client $client, array $config)
     {
@@ -109,9 +109,9 @@ class Adapter extends AbstractAdapter
     }
 
     /**
-     * @param  string             $path
+     * @param  string $path
      * @param  \DateTimeInterface $expiration
-     * @param  array              $options
+     * @param  array $options
      *
      * @return string
      */
@@ -137,9 +137,9 @@ class Adapter extends AbstractAdapter
     }
 
     /**
-     * @param string   $path
+     * @param string $path
      * @param resource $resource
-     * @param Config   $config
+     * @param Config $config
      *
      * @return array|bool
      */
@@ -161,9 +161,9 @@ class Adapter extends AbstractAdapter
     }
 
     /**
-     * @param string   $path
+     * @param string $path
      * @param resource $resource
-     * @param Config   $config
+     * @param Config $config
      *
      * @return array|bool
      */
@@ -183,14 +183,14 @@ class Adapter extends AbstractAdapter
         $source = $this->getSourcePath($path);
 
         $response = $this->client->copyObject([
-            'Bucket'     => $this->getBucket(),
-            'Key'        => $newpath,
+            'Bucket' => $this->getBucket(),
+            'Key' => $newpath,
             'CopySource' => $source,
         ]);
 
         $this->delete($path);
 
-        return (bool) $response;
+        return (bool)$response;
     }
 
     /**
@@ -203,9 +203,9 @@ class Adapter extends AbstractAdapter
     {
         $source = $this->getSourcePath($path);
 
-        return (bool) $this->client->copyObject([
-            'Bucket'     => $this->getBucket(),
-            'Key'        => $newpath,
+        return (bool)$this->client->copyObject([
+            'Bucket' => $this->getBucket(),
+            'Key' => $newpath,
             'CopySource' => $source,
         ]);
     }
@@ -217,9 +217,9 @@ class Adapter extends AbstractAdapter
      */
     public function delete($path)
     {
-        return (bool) $this->client->deleteObject([
+        return (bool)$this->client->deleteObject([
             'Bucket' => $this->getBucket(),
-            'Key'    => $path,
+            'Key' => $path,
         ]);
     }
 
@@ -234,10 +234,10 @@ class Adapter extends AbstractAdapter
 
         $keys = array_map(function ($item) {
             return ['Key' => $item['Key']];
-        }, (array) $response['Contents']);
+        }, (array)$response['Contents']);
 
-        return (bool) $this->client->deleteObjects([
-            'Bucket'  => $this->getBucket(),
+        return (bool)$this->client->deleteObjects([
+            'Bucket' => $this->getBucket(),
             'Objects' => $keys,
         ]);
     }
@@ -252,8 +252,8 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->putObject([
             'Bucket' => $this->getBucket(),
-            'Key'    => $dirname.'/_blank',
-            'Body'   => '',
+            'Key' => $dirname . '/_blank',
+            'Body' => '',
         ]);
     }
 
@@ -268,10 +268,10 @@ class Adapter extends AbstractAdapter
         $visibility = ($visibility === AdapterInterface::VISIBILITY_PUBLIC)
             ? 'public-read' : 'private';
 
-        return (bool) $this->client->PutObjectAcl([
+        return (bool)$this->client->PutObjectAcl([
             'Bucket' => $this->getBucket(),
-            'Key'    => $path,
-            'ACL'    => $visibility,
+            'Key' => $path,
+            'ACL' => $visibility,
         ]);
     }
 
@@ -283,7 +283,7 @@ class Adapter extends AbstractAdapter
     public function has($path)
     {
         try {
-            return (bool) $this->getMetadata($path);
+            return (bool)$this->getMetadata($path);
         } catch (NoSuchKeyException $e) {
             return false;
         }
@@ -299,10 +299,10 @@ class Adapter extends AbstractAdapter
         try {
             $response = $this->client->getObject([
                 'Bucket' => $this->getBucket(),
-                'Key'    => $path,
+                'Key' => $path,
             ]);
 
-            return ['contents' => (string) $response->get('Body')];
+            return ['contents' => (string)$response->get('Body')];
         } catch (NoSuchKeyException $e) {
             return false;
         }
@@ -324,17 +324,26 @@ class Adapter extends AbstractAdapter
 
     /**
      * @param string $directory
-     * @param bool   $recursive
+     * @param bool $recursive
      *
      * @return array|bool
      */
     public function listContents($directory = '', $recursive = false)
     {
-        return $this->client->listObjects([
-            'Bucket'    => $this->getBucket(),
-            'Prefix'    => $directory.'/',
+        $list = [];
+
+        $result = $this->client->listObjects([
+            'Bucket' => $this->getBucket(),
+            'Prefix' => $directory . '/',
             'Delimiter' => $recursive ? '' : '/',
         ])->toArray();
+
+        $contents = isset($result['Contents']) ? $result['Contents'] : [];
+        foreach ($contents as $content) {
+            $list[] = $this->normalizeFileInfo($content);
+        }
+
+        return $list;
     }
 
     /**
@@ -346,7 +355,7 @@ class Adapter extends AbstractAdapter
     {
         return $this->client->headObject([
             'Bucket' => $this->getBucket(),
-            'Key'    => $path,
+            'Key' => $path,
         ])->toArray();
     }
 
@@ -398,7 +407,7 @@ class Adapter extends AbstractAdapter
     {
         $meta = $this->client->getObjectAcl([
             'Bucket' => $this->getBucket(),
-            'Key'    => $path,
+            'Key' => $path,
         ]);
 
         foreach ($meta->get('Grants') as $grant) {
@@ -411,5 +420,15 @@ class Adapter extends AbstractAdapter
         }
 
         return ['visibility' => AdapterInterface::VISIBILITY_PRIVATE];
+    }
+
+    private function normalizeFileInfo(array $content)
+    {
+        return [
+            'type' => 'file',
+            'path' => $content['Key'],
+            'timestamp' => \Carbon\Carbon::parse($content['LastModified'])->timestamp,
+            'size' => (int)$content['Size'],
+        ];
     }
 }
