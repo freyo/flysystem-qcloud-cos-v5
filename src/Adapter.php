@@ -335,7 +335,7 @@ class Adapter extends AbstractAdapter
 
         $response = $this->client->listObjects([
             'Bucket'    => $this->getBucket(),
-            'Prefix'    => ((string)$directory === '') ? '' : ($directory.'/'),
+            'Prefix'    => ((string) $directory === '') ? '' : ($directory.'/'),
             'Delimiter' => $recursive ? '' : '/',
         ]);
 
