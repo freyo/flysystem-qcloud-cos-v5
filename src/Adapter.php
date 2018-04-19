@@ -100,7 +100,7 @@ class Adapter extends AbstractAdapter
      */
     public function getUrl($path)
     {
-        if (!empty($this->config['cdn'])) {
+        if ($this->config['cdn']) {
             return $this->applyPathPrefix($path);
         }
 
@@ -335,7 +335,7 @@ class Adapter extends AbstractAdapter
 
         $response = $this->client->listObjects([
             'Bucket'    => $this->getBucket(),
-            'Prefix'    => ((string) $directory === '') ? '' : (trim($directory, '/').'/'),
+            'Prefix'    => ((string) $directory === '') ? '' : ($directory.'/'),
             'Delimiter' => $recursive ? '' : '/',
         ]);
 
