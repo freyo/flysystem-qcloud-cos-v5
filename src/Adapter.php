@@ -232,7 +232,11 @@ class Adapter extends AbstractAdapter
      */
     public function deleteDir($dirname)
     {
-        $response = $this->listContents($dirname);
+        $response = $this->listObjects($dirname);
+        
+        if (!isset($response['Contents'])) {
+            return true;
+        }
 
         $keys = array_map(function ($item) {
             return ['Key' => $item['Key']];
@@ -334,11 +338,7 @@ class Adapter extends AbstractAdapter
     {
         $list = [];
 
-        $response = $this->client->listObjects([
-            'Bucket'    => $this->getBucket(),
-            'Prefix'    => ((string) $directory === '') ? '' : ($directory.'/'),
-            'Delimiter' => $recursive ? '' : '/',
-        ]);
+        $response = $this->listObjects($directory, $recursive);
 
         foreach ((array) $response->get('Contents') as $content) {
             $list[] = $this->normalizeFileInfo($content);
@@ -442,5 +442,20 @@ class Adapter extends AbstractAdapter
             'extension' => isset($path['extension']) ? $path['extension'] : '',
             'filename'  => (string) $path['filename'],
         ];
+    }
+    
+    /**
+     * @param string $directory
+     * @param bool   $recursive
+     *
+     * @return mixed
+     */
+    private function listObjects($directory = '', $recursive = false)
+    {
+        return $this->client->listObjects([
+            'Bucket'    => $this->getBucket(),
+            'Prefix'    => ((string) $directory === '') ? '' : ($directory.'/'),
+            'Delimiter' => $recursive ? '' : '/',
+        ]);
     }
 }
