@@ -78,7 +78,8 @@ class Adapter extends AbstractAdapter
      */
     public function getRegion()
     {
-        return $this->regionMap[$this->config['region']];
+        return array_key_exists($this->regionMap, $this->config['region']) 
+            ? $this->regionMap[$this->config['region']] : $this->config['region'];
     }
 
     /**
