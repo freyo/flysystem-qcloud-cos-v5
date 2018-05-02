@@ -78,7 +78,7 @@ class Adapter extends AbstractAdapter
      */
     public function getRegion()
     {
-        return array_key_exists($this->config['region'], $this->regionMap) 
+        return array_key_exists($this->config['region'], $this->regionMap)
             ? $this->regionMap[$this->config['region']] : $this->config['region'];
     }
 
@@ -233,7 +233,7 @@ class Adapter extends AbstractAdapter
     public function deleteDir($dirname)
     {
         $response = $this->listObjects($dirname);
-        
+
         if (!isset($response['Contents'])) {
             return true;
         }
@@ -443,7 +443,7 @@ class Adapter extends AbstractAdapter
             'filename'  => (string) $path['filename'],
         ];
     }
-    
+
     /**
      * @param string $directory
      * @param bool   $recursive
