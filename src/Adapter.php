@@ -121,7 +121,7 @@ class Adapter extends AbstractAdapter
     {
         return urldecode(
             $this->client->getObjectUrl(
-                $this->getBucket(), $path, Carbon::now()->diffInSeconds($expiration), $options
+                $this->getBucket(), $path, $expiration->format('c'), $options
             )
         );
     }
