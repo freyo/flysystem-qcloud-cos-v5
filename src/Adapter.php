@@ -106,7 +106,9 @@ class Adapter extends AbstractAdapter
         }
 
         return urldecode(
-            $this->client->getObjectUrl($this->getBucket(), $path)
+            $this->client->getObjectUrl(
+                $this->getBucket(), $path, null, ['Scheme' => $this->config['scheme']]
+            )
         );
     }
 
@@ -119,11 +121,20 @@ class Adapter extends AbstractAdapter
      */
     public function getTemporaryUrl($path, DateTimeInterface $expiration, array $options = [])
     {
-        return urldecode(
+        $options = array_merge($options, ['Scheme' => $this->config['scheme']]);
+
+        $objectUrl = urldecode(
             $this->client->getObjectUrl(
                 $this->getBucket(), $path, $expiration->format('c'), $options
             )
         );
+
+        if ($this->config['cdn']) {
+            $url = parse_url($objectUrl);
+            return $this->config['cdn'] . $url['path'] . '?' . $url['query'];
+        }
+
+        return $objectUrl;
     }
 
     /**
