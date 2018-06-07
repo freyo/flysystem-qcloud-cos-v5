@@ -105,10 +105,8 @@ class Adapter extends AbstractAdapter
             return $this->applyPathPrefix($path);
         }
 
-        return urldecode(
-            $this->client->getObjectUrl(
-                $this->getBucket(), $path, null, ['Scheme' => $this->config['scheme']]
-            )
+        return $this->client->getObjectUrl(
+            $this->getBucket(), $path, null, ['Scheme' => $this->config['scheme']]
         );
     }
 
@@ -123,10 +121,8 @@ class Adapter extends AbstractAdapter
     {
         $options = array_merge($options, ['Scheme' => $this->config['scheme']]);
 
-        $objectUrl = urldecode(
-            $this->client->getObjectUrl(
-                $this->getBucket(), $path, $expiration->format('c'), $options
-            )
+        $objectUrl = $this->client->getObjectUrl(
+            $this->getBucket(), $path, $expiration->format('c'), $options
         );
 
         if ($this->config['cdn']) {
