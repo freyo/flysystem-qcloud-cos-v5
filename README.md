@@ -37,7 +37,7 @@ COS 的可用地域（Region）请参见 [#Region](#region)
   include __DIR__ . '/vendor/autoload.php';
 
   $config = [
-      'region'          => 'gz',
+      'region'          => 'ap-guangzhou',
       'credentials'     => [
           'appId'     => 'your-app-id',
           'secretId'  => 'your-secret-id',
@@ -47,6 +47,7 @@ COS 的可用地域（Region）请参见 [#Region](#region)
       'connect_timeout' => 60,
       'bucket'          => 'your-bucket-name',
       'cdn'             => '', // default: https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
+      'scheme'          => 'https',
   ];
 
   $adapter = new Adapter($config);
@@ -115,7 +116,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
       // ...
       'cosv5' => [
             'driver' => 'cosv5',
-            'region'          => env('COSV5_REGION', 'gz'),
+            'region'          => env('COSV5_REGION', 'ap-guangzhou'),
             'credentials'     => [
                 'appId'     => env('COSV5_APP_ID'),
                 'secretId'  => env('COSV5_SECRET_ID'),
@@ -125,6 +126,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
             'connect_timeout' => env('COSV5_CONNECT_TIMEOUT', 60),
             'bucket'          => env('COSV5_BUCKET'),
             'cdn'             => env('COSV5_CDN'),
+            'scheme'          => env('COSV5_SCHEME', 'https'),
       ],
   ],
   ```
@@ -138,8 +140,9 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
   COSV5_TIMEOUT=60
   COSV5_CONNECT_TIMEOUT=60
   COSV5_BUCKET=
-  COSV5_REGION=gz
+  COSV5_REGION=ap-guangzhou
   COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
+  COSV5_SCHEME=https
   ```
 
 ## Use in Lumen
@@ -172,7 +175,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
   COSV5_TIMEOUT=60
   COSV5_CONNECT_TIMEOUT=60
   COSV5_BUCKET=
-  COSV5_REGION=gz
+  COSV5_REGION=ap-guangzhou
   COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
   ```
 
