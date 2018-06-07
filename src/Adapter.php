@@ -105,9 +105,13 @@ class Adapter extends AbstractAdapter
             return $this->applyPathPrefix($path);
         }
 
-        return $this->client->getObjectUrl(
+        $objectUrl = $this->client->getObjectUrl(
             $this->getBucket(), $path, null, ['Scheme' => $this->config['scheme']]
         );
+
+        $url = parse_url($objectUrl);
+
+        return sprintf('%s://%s%s', $url['scheme'], $url['host'], urldecode($url['path']));
     }
 
     /**
@@ -125,12 +129,13 @@ class Adapter extends AbstractAdapter
             $this->getBucket(), $path, $expiration->format('c'), $options
         );
 
+        $url = parse_url($objectUrl);
+
         if ($this->config['cdn']) {
-            $url = parse_url($objectUrl);
-            return $this->config['cdn'] . $url['path'] . '?' . $url['query'];
+            return $this->config['cdn'] . urldecode($url['path']) . '?' . $url['query'];
         }
 
-        return $objectUrl;
+        return sprintf('%s://%s%s?%s', $url['scheme'], $url['host'], urldecode($url['path']), $url['query']);
     }
 
     /**
