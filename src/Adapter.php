@@ -194,17 +194,11 @@ class Adapter extends AbstractAdapter
      */
     public function rename($path, $newpath)
     {
-        $source = $this->getSourcePath($path);
-
-        $response = $this->client->copyObject([
-            'Bucket'     => $this->getBucket(),
-            'Key'        => $newpath,
-            'CopySource' => $source,
-        ]);
+        $result = $this->copy($path, $newpath);
 
         $this->delete($path);
 
-        return (bool) $response;
+        return $result;
     }
 
     /**
@@ -217,11 +211,7 @@ class Adapter extends AbstractAdapter
     {
         $source = $this->getSourcePath($path);
 
-        return (bool) $this->client->copyObject([
-            'Bucket'     => $this->getBucket(),
-            'Key'        => $newpath,
-            'CopySource' => $source,
-        ]);
+        return (bool) $this->client->copy($this->getBucket(), $newpath, $source);
     }
 
     /**
