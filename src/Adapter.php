@@ -106,7 +106,8 @@ class Adapter extends AbstractAdapter
         }
 
         $objectUrl = $this->client->getObjectUrl(
-            $this->getBucket(), $path, null, ['Scheme' => $this->config['scheme']]
+            $this->getBucket(), $path, null,
+                ['Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http']
         );
 
         $url = parse_url($objectUrl);
@@ -123,7 +124,8 @@ class Adapter extends AbstractAdapter
      */
     public function getTemporaryUrl($path, DateTimeInterface $expiration, array $options = [])
     {
-        $options = array_merge($options, ['Scheme' => $this->config['scheme']]);
+        $options = array_merge($options,
+            ['Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http']);
 
         $objectUrl = $this->client->getObjectUrl(
             $this->getBucket(), $path, $expiration->format('c'), $options
