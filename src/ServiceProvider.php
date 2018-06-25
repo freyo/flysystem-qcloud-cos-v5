@@ -2,6 +2,7 @@
 
 namespace Freyo\Flysystem\QcloudCOSv5;
 
+use Freyo\Flysystem\QcloudCOSv5\Plugins\CDN;
 use Freyo\Flysystem\QcloudCOSv5\Plugins\GetUrl;
 use Freyo\Flysystem\QcloudCOSv5\Plugins\PutRemoteFile;
 use Freyo\Flysystem\QcloudCOSv5\Plugins\PutRemoteFileAs;
@@ -29,11 +30,12 @@ class ServiceProvider extends LaravelServiceProvider
         $this->app->make('filesystem')
                   ->extend('cosv5', function ($app, $config) {
                       $client = new Client($config);
-                      $flysystem = new Filesystem(new Adapter($client, $config));
+                      $flysystem = new Filesystem(new Adapter($client, $config), $config);
 
                       $flysystem->addPlugin(new PutRemoteFile());
                       $flysystem->addPlugin(new PutRemoteFileAs());
                       $flysystem->addPlugin(new GetUrl());
+                      $flysystem->addPlugin(new CDN());
 
                       return $flysystem;
                   });
