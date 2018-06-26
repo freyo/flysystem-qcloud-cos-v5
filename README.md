@@ -209,6 +209,10 @@ $temporaryUrl = $disk->temporaryUrl('new/file1.jpg', Carbon::now()->addMinutes(5
 // create a file from remote(plugin support)
 $disk->putRemoteFile('avatars/1', 'http://example.org/avatar.jpg');
 $disk->putRemoteFileAs('avatars/1', 'http://example.org/avatar.jpg', 'file1.jpg');
+
+// refresh cdn cache(plugin support)
+$disk->cdn()->refreshUrl(['http://your-cdn-host/path/to/avatar.jpg']);
+$disk->cdn()->refreshDir(['http://your-cdn-host/path/to/']);
 ```
 
 [Full API documentation.](https://laravel.com/api/5.5/Illuminate/Contracts/Filesystem/Cloud.html)
