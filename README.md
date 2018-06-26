@@ -228,4 +228,6 @@ $disk->cdn()->refreshDir(['http://your-cdn-host/path/to/']);
 |新加坡|sg / sgp|ap-singapore|
 |北京|bj|ap-beijing|
 
+Recommend using `AP-*`
+
 [Official Documentation](https://cloud.tencent.com/document/product/436/6224)
