@@ -144,7 +144,7 @@ class CDN extends AbstractPlugin
     {
         ksort($params);
 
-        $srcStr = 'POSTcdn.api.qcloud.com/v2/index.php?' . urldecode(http_build_query($params));
+        $srcStr = 'POSTcdn.api.qcloud.com/v2/index.php?'.urldecode(http_build_query($params));
 
         return base64_encode(hash_hmac('sha1', $srcStr, $this->getCredentials()['secretKey'], true));
     }
