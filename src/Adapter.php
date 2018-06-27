@@ -134,7 +134,7 @@ class Adapter extends AbstractAdapter
         $url = parse_url($objectUrl);
 
         if ($this->config['cdn']) {
-            return $this->config['cdn'] . urldecode($url['path']) . '?' . $url['query'];
+            return $this->config['cdn'].urldecode($url['path']).'?'.$url['query'];
         }
 
         return sprintf('%s://%s%s?%s', $url['scheme'], $url['host'], urldecode($url['path']), $url['query']);
