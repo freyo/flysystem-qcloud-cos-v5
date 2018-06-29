@@ -155,8 +155,6 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
      */
     public function testReadStream(AdapterInterface $adapter, $config, $options)
     {
