@@ -190,6 +190,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
   COSV5_BUCKET=
   COSV5_REGION=ap-guangzhou
   COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
+  COSV5_SCHEME=https
   ```
 
 ### Usage
