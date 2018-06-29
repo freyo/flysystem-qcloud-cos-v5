@@ -142,8 +142,6 @@ class AdapterTest extends TestCase
 
     /**
      * @dataProvider Provider
-     *
-     * @deprecated
      */
     public function testGetUrl(AdapterInterface $adapter, $config, $options)
     {
