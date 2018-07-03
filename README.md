@@ -245,8 +245,3 @@ $disk->cdn()->refreshDir(['http://your-cdn-host/path/to/']);
 Recommend using `ap-*`
 
 [Official Documentation](https://cloud.tencent.com/document/product/436/6224)
-
-## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/freyo/flysystem-qcloud-cos-v5/badge.svg?style=beer-square)](https://beerpay.io/freyo/flysystem-qcloud-cos-v5)  [![Beerpay](https://beerpay.io/freyo/flysystem-qcloud-cos-v5/make-wish.svg?style=flat-square)](https://beerpay.io/freyo/flysystem-qcloud-cos-v5?focus=wish)
