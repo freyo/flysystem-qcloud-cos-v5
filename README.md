@@ -24,6 +24,7 @@
   </p>
   <p align="center">This is a Flysystem adapter for the qcloud-cos-sdk-php v5.</p>
   <p align="center">腾讯云COS对象存储 V5</p>
+  <p align="center">安全稳定、海量、便捷、低延迟、低成本的云端存储服务</p>
 </div>
 
 ## Attention
