@@ -13,7 +13,7 @@ use Qcloud\Cos\Exception\NoSuchKeyException;
 /**
  * Class Adapter.
  */
-class Adapter extends AbstractAdapter
+class Adapter extends AbstractAdapter implements CanOverwriteFiles
 {
     /**
      * @var Client
