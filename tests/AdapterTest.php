@@ -140,6 +140,10 @@ class AdapterTest extends TestCase
     public function testRead(AdapterInterface $adapter, $config, $options)
     {
         $this->assertArrayHasKey('contents', $adapter->read("foo/{$options['machineId']}/bar.md"));
+        $this->assertSame(
+            $adapter->read("foo/{$options['machineId']}/bar.md"),
+            file_get_contents($adapter->getUrl("foo/{$options['machineId']}/bar.md"))
+        );
     }
 
     /**
@@ -158,6 +162,7 @@ class AdapterTest extends TestCase
      */
     public function testReadStream(AdapterInterface $adapter, $config, $options)
     {
+        $this->assertArrayHasKey('stream', $adapter->readStream("foo/{$options['machineId']}/bar.md"));
         $this->assertSame(
             stream_get_contents(fopen($adapter->getUrl("foo/{$options['machineId']}/bar.md"), 'rb', false)),
             stream_get_contents($adapter->readStream("foo/{$options['machineId']}/bar.md")['stream'])
