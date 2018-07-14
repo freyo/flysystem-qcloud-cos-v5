@@ -23,6 +23,8 @@ class AdapterTest extends TestCase
             'connect_timeout' => 10,
             'bucket'          => getenv('COSV5_BUCKET'),
             'cdn'             => getenv('COSV5_CDN'),
+            'scheme'          => getenv('COSV5_SCHEME'),
+            'read_from_cdn'   => getenv('COSV5_READ_FROM_CDN'),
         ];
 
         $cosApi = new Client($config);

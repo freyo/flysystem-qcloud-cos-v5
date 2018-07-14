@@ -308,15 +308,36 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     public function read($path)
     {
         try {
-            $response = $this->client->getObject([
-                'Bucket' => $this->getBucket(),
-                'Key'    => $path,
-            ]);
+            if (isset($this->config['read_from_cdn']) && $this->config['read_from_cdn']) {
+                $response = $this->getHttpClient()
+                                 ->get($this->getTemporaryUrl($path, Carbon::now()->addMinutes(5)))
+                                 ->getBody()
+                                 ->getContents();
+            } else {
+                $response = $this->client->getObject([
+                    'Bucket' => $this->getBucket(),
+                    'Key'    => $path,
+                ])->get('Body');
+            }
 
-            return ['contents' => (string) $response->get('Body')];
+            return ['contents' => (string)$response];
         } catch (NoSuchKeyException $e) {
             return false;
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return false;
         }
+    }
+
+    /**
+     * @return \GuzzleHttp\Client
+     */
+    protected function getHttpClient()
+    {
+        return $client = (new \GuzzleHttp\Client([
+            'verify'          => false,
+            'timeout'         => $this->config['timeout'],
+            'connect_timeout' => $this->config['connect_timeout'],
+        ]));
     }
 
     /**
@@ -327,8 +348,17 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     public function readStream($path)
     {
         try {
-            return ['stream' => fopen($this->getUrl($path), 'rb', false)];
+            $temporaryUrl = $this->getTemporaryUrl($path, Carbon::now()->addMinutes(5));
+
+            $stream = $this->getHttpClient()
+                           ->get($temporaryUrl, ['stream' => true])
+                           ->getBody()
+                           ->detach();
+
+            return ['stream' => $stream];
         } catch (NoSuchKeyException $e) {
+            return false;
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
             return false;
         }
     }
