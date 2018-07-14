@@ -142,7 +142,7 @@ class AdapterTest extends TestCase
         $this->assertArrayHasKey('contents', $adapter->read("foo/{$options['machineId']}/bar.md"));
         $this->assertSame(
             $adapter->read("foo/{$options['machineId']}/bar.md"),
-            file_get_contents($adapter->getUrl("foo/{$options['machineId']}/bar.md"))
+            file_get_contents($adapter->getUrl("foo/{$options['machineId']}/bar.md")['contents'])
         );
     }
 
