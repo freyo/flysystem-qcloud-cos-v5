@@ -30,9 +30,9 @@ class AdapterTest extends TestCase
         $adapter = new Adapter($cosApi, $config);
 
         $options = [
-            'machineId' => PHP_OS . PHP_VERSION,
+            'machineId' => PHP_OS.PHP_VERSION,
         ];
-        
+
         return [
             [$adapter, $config, $options],
         ];

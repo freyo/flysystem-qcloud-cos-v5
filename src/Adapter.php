@@ -5,11 +5,11 @@ namespace Freyo\Flysystem\QcloudCOSv5;
 use Carbon\Carbon;
 use DateTimeInterface;
 use League\Flysystem\Adapter\AbstractAdapter;
+use League\Flysystem\Adapter\CanOverwriteFiles;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
 use Qcloud\Cos\Client;
 use Qcloud\Cos\Exception\NoSuchKeyException;
-use League\Flysystem\Adapter\CanOverwriteFiles;
 
 /**
  * Class Adapter.
