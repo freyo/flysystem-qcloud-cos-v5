@@ -27,8 +27,10 @@ class PutRemoteFileAs extends AbstractPlugin
     public function handle($path, $remoteUrl, $name, array $options = [])
     {
         //Get file from remote url
-        $contents = (new \GuzzleHttp\Client(['verify' => false]))
-            ->request('get', $remoteUrl)
+        $contents = $this->filesystem
+            ->getAdapter()
+            ->getHttpClient()
+            ->get($remoteUrl)
             ->getBody()
             ->getContents();
 

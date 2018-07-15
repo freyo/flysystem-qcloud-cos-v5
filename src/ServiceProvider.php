@@ -6,6 +6,7 @@ use Freyo\Flysystem\QcloudCOSv5\Plugins\CDN;
 use Freyo\Flysystem\QcloudCOSv5\Plugins\GetUrl;
 use Freyo\Flysystem\QcloudCOSv5\Plugins\PutRemoteFile;
 use Freyo\Flysystem\QcloudCOSv5\Plugins\PutRemoteFileAs;
+use Freyo\Flysystem\QcloudCOSv5\Plugins\TCaptcha;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use League\Flysystem\Filesystem;
@@ -36,6 +37,7 @@ class ServiceProvider extends LaravelServiceProvider
                       $flysystem->addPlugin(new PutRemoteFileAs());
                       $flysystem->addPlugin(new GetUrl());
                       $flysystem->addPlugin(new CDN());
+                      $flysystem->addPlugin(new TCaptcha());
 
                       return $flysystem;
                   });

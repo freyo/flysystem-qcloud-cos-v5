@@ -331,7 +331,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * @return \GuzzleHttp\Client
      */
-    protected function getHttpClient()
+    public function getHttpClient()
     {
         return $client = (new \GuzzleHttp\Client([
             'verify'          => false,
