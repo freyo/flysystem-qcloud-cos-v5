@@ -33,6 +33,8 @@ JSON API 接口与标准 XML 的 API 底层架构相同，数据互通，可以�
 
 腾讯云 COS 的 XML API 服务推出后，推荐您使用 XML API 接口， JSON API 接口日后将保持维护状态，可以正常使用但是不发展新特性。
 
+[XML API 与 JSON API 常见问题](https://cloud.tencent.com/document/product/436/6281)
+
 COS 的可用地域（Region）请参见 [#Region](#region)
 
 ## Installation
