@@ -150,11 +150,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function write($path, $contents, Config $config)
     {
-        return $this->client->upload($this->getBucket(), $path, $contents, [
-            'params' => [
-                'ACL' => $config->get('visibility', 'public-read'),
-            ],
-        ]);
+        return $this->client->upload($this->getBucket(), $path, $contents);
     }
 
     /**
@@ -166,11 +162,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function writeStream($path, $resource, Config $config)
     {
-        return $this->client->upload($this->getBucket(), $path, stream_get_contents($resource, -1, 0), [
-            'params' => [
-                'ACL' => $config->get('visibility', 'public-read'),
-            ],
-        ]);
+        return $this->client->upload($this->getBucket(), $path, stream_get_contents($resource, -1, 0));
     }
 
     /**
