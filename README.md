@@ -61,9 +61,10 @@ COS 的可用地域（Region）请参见 [#Region](#region)
       ],
       'timeout'         => 60,
       'connect_timeout' => 60,
-      'bucket'          => 'your-bucket-name',
+      'bucket'          => 'your-bucket-name', // without "-APPID"
       'cdn'             => '', // default: https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
       'scheme'          => 'https',
+      'read_from_cdn'   => false,
   ];
 
   $adapter = new Adapter($config);
@@ -143,6 +144,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
             'bucket'          => env('COSV5_BUCKET'),
             'cdn'             => env('COSV5_CDN'),
             'scheme'          => env('COSV5_SCHEME', 'https'),
+            'read_from_cdn'   => env('COSV5_READ_FROM_CDN', false),
       ],
   ],
   ```
@@ -159,6 +161,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
   COSV5_REGION=ap-guangzhou
   COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
   COSV5_SCHEME=https
+  COSV5_READ_FROM_CDN=false
   ```
 
 ## Use in Lumen
@@ -194,6 +197,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
   COSV5_REGION=ap-guangzhou
   COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
   COSV5_SCHEME=https
+  COSV5_READ_FROM_CDN=false
   ```
 
 ### Usage
@@ -230,6 +234,10 @@ $disk->putRemoteFileAs('avatars/1', 'http://example.org/avatar.jpg', 'file1.jpg'
 // refresh cdn cache(plugin support)
 $disk->cdn()->refreshUrl(['http://your-cdn-host/path/to/avatar.jpg']);
 $disk->cdn()->refreshDir(['http://your-cdn-host/path/to/']);
+
+// tencent captcha(plugin support)
+// https://007.qq.com/product.html
+$disk->tcaptcha($aid, $appSecretKey)->verify($ticket, $randStr, $userIP);
 ```
 
 [Full API documentation.](https://laravel.com/api/5.5/Illuminate/Contracts/Filesystem/Cloud.html)
