@@ -275,7 +275,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     {
         return $this->client->putObject([
             'Bucket' => $this->getBucket(),
-            'Key'    => $dirname.'/_blank',
+            'Key'    => $dirname.'/',
             'Body'   => '',
         ]);
     }
