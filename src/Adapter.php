@@ -485,7 +485,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         $path = pathinfo($content['Key']);
 
         return [
-            'type'      => 'file',
+            'type'      => substr($content['Key'], -1) === '/' ? 'dir' : 'file',
             'path'      => $content['Key'],
             'timestamp' => Carbon::parse($content['LastModified'])->getTimestamp(),
             'size'      => (int) $content['Size'],
