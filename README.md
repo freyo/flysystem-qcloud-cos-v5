@@ -108,8 +108,10 @@ int $flysystem->getTimestamp('file.md');
 
 string $flysystem->getVisibility('file.md');
 
-bool $flysystem->setVisibility('file.md', 'public'); //or 'private'
+bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'(继承 Bucket 权限)
 ```
+
+> 注：当前访问策略条目限制为 1000 条，如果您不需要进行 Object ACL 控制，请填 default 或者此项不进行设置，默认继承 Bucket 权限。
 
 [Full API documentation.](http://flysystem.thephpleague.com/api/)
 
