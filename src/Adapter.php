@@ -288,18 +288,10 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function setVisibility($path, $visibility)
     {
-        switch ($visibility) {
-            case AdapterInterface::VISIBILITY_PUBLIC:
-                $visibility = 'public-read';
-                break;
-            default:
-                //
-        }
-
         return (bool) $this->client->PutObjectAcl([
             'Bucket' => $this->getBucket(),
             'Key'    => $path,
-            'ACL'    => $visibility,
+            'ACL'    => $this->normalizeVisibility($visibility),
         ]);
     }
 
@@ -525,9 +517,25 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         }
 
         if ($config->has('visibility')) {
-            $options['params']['ACL'] = $config->get('visibility');
+            $options['params']['ACL'] = $this->normalizeVisibility($config->get('visibility'));
         }
 
         return $options;
+    }
+
+    /**
+     * @param $visibility
+     *
+     * @return string
+     */
+    private function normalizeVisibility($visibility)
+    {
+        switch ($visibility) {
+            case AdapterInterface::VISIBILITY_PUBLIC:
+                $visibility = 'public-read';
+                break;
+        }
+
+        return $visibility;
     }
 }
