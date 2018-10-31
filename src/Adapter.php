@@ -106,9 +106,12 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             return $this->applyPathPrefix($path);
         }
 
+        $options = [
+            'Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http'
+        ];
+
         $objectUrl = $this->client->getObjectUrl(
-            $this->getBucket(), $path, null,
-                ['Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http']
+            $this->getBucket(), $path, null, $options
         );
 
         $url = parse_url($objectUrl);
@@ -150,7 +153,9 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function write($path, $contents, Config $config)
     {
-        return $this->client->upload($this->getBucket(), $path, $contents);
+        $options = $this->prepareUploadConfig($config);
+
+        return $this->client->upload($this->getBucket(), $path, $contents, $options);
     }
 
     /**
@@ -162,7 +167,14 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function writeStream($path, $resource, Config $config)
     {
-        return $this->client->upload($this->getBucket(), $path, stream_get_contents($resource, -1, 0));
+        $options = $this->prepareUploadConfig($config);
+
+        return $this->client->upload(
+            $this->getBucket(),
+            $path,
+            stream_get_contents($resource, -1, 0),
+            $options
+        );
     }
 
     /**
@@ -497,5 +509,25 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             'Prefix'    => ((string) $directory === '') ? '' : ($directory.'/'),
             'Delimiter' => $recursive ? '' : '/',
         ]);
+    }
+
+    /**
+     * @param Config $config
+     *
+     * @return array
+     */
+    private function prepareUploadConfig(Config $config)
+    {
+        $options = [];
+
+        if ($config->has('params')) {
+            $options['params'] = $config->get('params');
+        }
+
+        if ($config->has('visibility')) {
+            $options['params']['ACL'] = $config->get('visibility');
+        }
+
+        return $options;
     }
 }
