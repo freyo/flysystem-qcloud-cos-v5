@@ -49,6 +49,7 @@ COS 的可用地域（Region）请参见 [#Region](#region)
   <?php
   use Freyo\Flysystem\QcloudCOSv5\Adapter;
   use League\Flysystem\Filesystem;
+  use Qcloud\Cos\Client;
 
   include __DIR__ . '/vendor/autoload.php';
 
@@ -67,8 +68,7 @@ COS 的可用地域（Region）请参见 [#Region](#region)
       'read_from_cdn'   => false,
   ];
 
-  $adapter = new Adapter($config);
-  $filesystem = new Filesystem($adapter);
+  $filesystem = new Filesystem(new Adapter(new Client($config), $config));
   ```
 
 ### API
