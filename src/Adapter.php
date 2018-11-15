@@ -71,7 +71,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getBucket()
     {
-        return str_replace('-'.getAppId(), '', $this->config['bucket']);
+        return str_replace('-'.$this->getAppId(), '', $this->config['bucket']);
     }
 
     /**
