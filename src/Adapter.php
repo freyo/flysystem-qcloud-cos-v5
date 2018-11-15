@@ -98,8 +98,8 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getSourcePath($path)
     {
-        return sprintf('%s-%s.cos.%s.myqcloud.com/%s',
-            $this->getBucket(), $this->getAppId(), $this->getRegion(), $path
+        return sprintf('%s.cos.%s.myqcloud.com/%s',
+            $this->getBucketWithAppId(), $this->getRegion(), $path
         );
     }
 
@@ -157,7 +157,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      * @param string $contents
      * @param Config $config
      *
-     * @return array|bool
+     * @return array|false
      */
     public function write($path, $contents, Config $config)
     {
@@ -171,7 +171,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      * @param resource $resource
      * @param Config   $config
      *
-     * @return array|bool
+     * @return array|false
      */
     public function writeStream($path, $resource, Config $config)
     {
@@ -190,7 +190,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      * @param string $contents
      * @param Config $config
      *
-     * @return array|bool
+     * @return array|false
      */
     public function update($path, $contents, Config $config)
     {
@@ -202,7 +202,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      * @param resource $resource
      * @param Config   $config
      *
-     * @return array|bool
+     * @return array|false
      */
     public function updateStream($path, $resource, Config $config)
     {
@@ -277,7 +277,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      * @param string $dirname
      * @param Config $config
      *
-     * @return array|bool
+     * @return array|false
      */
     public function createDir($dirname, Config $config)
     {
@@ -334,7 +334,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
                 $response = $this->client->getObject([
                     'Bucket' => $this->getBucket(),
                     'Key'    => $path,
-                ])->get('Body');
+                ])->/** @scrutinizer ignore-call */ get('Body');
             }
 
             return ['contents' => (string)$response];
@@ -350,11 +350,11 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getHttpClient()
     {
-        return $client = (new \GuzzleHttp\Client([
+        return new \GuzzleHttp\Client([
             'verify'          => false,
             'timeout'         => $this->config['timeout'],
             'connect_timeout' => $this->config['connect_timeout'],
-        ]));
+        ]);
     }
 
     /**
@@ -409,7 +409,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         return $this->client->headObject([
             'Bucket' => $this->getBucket(),
             'Key'    => $path,
-        ])->toArray();
+        ])->/** @scrutinizer ignore-call */ toArray();
     }
 
     /**
