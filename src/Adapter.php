@@ -57,13 +57,21 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
 
         $this->setPathPrefix($config['cdn']);
     }
-
+    
+    /**
+     * @return string
+     */
+    public function getBucketWithAppId()
+    {
+        return $this->getBucket().'-'.$this->getAppId();
+    }
+    
     /**
      * @return string
      */
     public function getBucket()
     {
-        return $this->config['bucket'];
+        return str_replace('-'.getAppId(), '', $this->config['bucket']);
     }
 
     /**
