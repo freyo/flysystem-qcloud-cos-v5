@@ -334,7 +334,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
                 $response = $this->client->getObject([
                     'Bucket' => $this->getBucket(),
                     'Key'    => $path,
-                ])->/** @scrutinizer ignore-call */ get('Body');
+                ])->get('Body');
             }
 
             return ['contents' => (string)$response];
@@ -409,7 +409,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         return $this->client->headObject([
             'Bucket' => $this->getBucket(),
             'Key'    => $path,
-        ])->/** @scrutinizer ignore-call */ toArray();
+        ])->toArray();
     }
 
     /**

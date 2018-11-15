@@ -22,7 +22,7 @@ class PutRemoteFileAs extends AbstractPlugin
      * @param       $name
      * @param array $options
      *
-     * @return bool
+     * @return string|false
      */
     public function handle($path, $remoteUrl, $name, array $options = [])
     {
