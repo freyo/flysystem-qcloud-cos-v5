@@ -3,6 +3,7 @@
 namespace Freyo\Flysystem\QcloudCOSv5;
 
 use Freyo\Flysystem\QcloudCOSv5\Plugins\CDN;
+use Freyo\Flysystem\QcloudCOSv5\Plugins\GetFederationToken;
 use Freyo\Flysystem\QcloudCOSv5\Plugins\GetUrl;
 use Freyo\Flysystem\QcloudCOSv5\Plugins\PutRemoteFile;
 use Freyo\Flysystem\QcloudCOSv5\Plugins\PutRemoteFileAs;
@@ -38,6 +39,7 @@ class ServiceProvider extends LaravelServiceProvider
                       $flysystem->addPlugin(new GetUrl());
                       $flysystem->addPlugin(new CDN());
                       $flysystem->addPlugin(new TCaptcha());
+                      $flysystem->addPlugin(new GetFederationToken());
 
                       return $flysystem;
                   });

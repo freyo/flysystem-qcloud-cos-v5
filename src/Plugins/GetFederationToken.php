@@ -19,18 +19,37 @@ class GetFederationToken extends AbstractPlugin
     /**
      * @param string $path
      * @param int $seconds
+     * @param callable $customPolicy
+     * @param string $name
      *
      * @return bool|array
      */
-    public function handle($path = '', $seconds = 7200)
+    public function handle($path = '', $seconds = 7200, callable $customPolicy = null, $name = 'cos')
     {
+        $policy = is_callable($customPolicy)
+            ? $this->getCustomPolicy($customPolicy, $path)
+            : $this->getPolicy($path);
+
         $params = [
             'durationSeconds' => $seconds,
-            'name' => 'cos',
-            'policy' => urlencode($this->getPolicy($path))
+            'name' => $name,
+            'policy' => urlencode($policy)
         ];
 
         return $this->request($params, 'GetFederationToken');
+    }
+
+    /**
+     * @param callable $callable
+     * @param $path
+     *
+     * @return string
+     */
+    protected function getCustomPolicy(callable $callable, $path)
+    {
+        $policy = call_user_func($callable, $path, $this->getConfig());
+
+        return json_encode($policy, JSON_UNESCAPED_SLASHES);
     }
 
     /**
@@ -67,7 +86,7 @@ class GetFederationToken extends AbstractPlugin
             ],
         ];
 
-        return str_replace('\\/', '/', json_encode($policy));
+        return json_encode($policy, JSON_UNESCAPED_SLASHES);
     }
 
     /**
