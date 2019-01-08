@@ -2,6 +2,7 @@
 
 namespace Freyo\Flysystem\QcloudCOSv5\Plugins;
 
+use Closure;
 use League\Flysystem\Plugin\AbstractPlugin;
 
 class GetFederationToken extends AbstractPlugin
@@ -19,14 +20,14 @@ class GetFederationToken extends AbstractPlugin
     /**
      * @param string $path
      * @param int $seconds
-     * @param callable $customPolicy
+     * @param Closure $customPolicy
      * @param string $name
      *
      * @return bool|array
      */
-    public function handle($path = '', $seconds = 7200, callable $customPolicy = null, $name = 'cos')
+    public function handle($path = '', $seconds = 7200, Closure $customPolicy = null, $name = 'cos')
     {
-        $policy = is_callable($customPolicy)
+        $policy = !is_null($customPolicy)
             ? $this->getCustomPolicy($customPolicy, $path)
             : $this->getPolicy($path);
 
@@ -40,12 +41,12 @@ class GetFederationToken extends AbstractPlugin
     }
 
     /**
-     * @param callable $callable
+     * @param Closure $callable
      * @param $path
      *
      * @return string
      */
-    protected function getCustomPolicy(callable $callable, $path)
+    protected function getCustomPolicy(Closure $callable, $path)
     {
         $policy = call_user_func($callable, $path, $this->getConfig());
 
