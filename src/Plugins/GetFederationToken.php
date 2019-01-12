@@ -50,7 +50,7 @@ class GetFederationToken extends AbstractPlugin
     {
         $policy = call_user_func($callable, $path, $this->getConfig());
 
-        return json_encode($policy, JSON_UNESCAPED_SLASHES);
+        return \GuzzleHttp\json_encode($policy, JSON_UNESCAPED_SLASHES);
     }
 
     /**
@@ -87,7 +87,7 @@ class GetFederationToken extends AbstractPlugin
             ],
         ];
 
-        return json_encode($policy, JSON_UNESCAPED_SLASHES);
+        return \GuzzleHttp\json_encode($policy, JSON_UNESCAPED_SLASHES);
     }
 
     /**
