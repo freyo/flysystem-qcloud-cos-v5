@@ -234,8 +234,13 @@ $disk->putRemoteFile('avatars/1', 'http://example.org/avatar.jpg');
 $disk->putRemoteFileAs('avatars/1', 'http://example.org/avatar.jpg', 'file1.jpg');
 
 // refresh cdn cache(plugin support)
+// https://cloud.tencent.com/document/product/228/3946
 $disk->cdn()->refreshUrl(['http://your-cdn-host/path/to/avatar.jpg']);
 $disk->cdn()->refreshDir(['http://your-cdn-host/path/to/']);
+
+// cdn url signature(plugin support)
+// https://cloud.tencent.com/document/product/228/13677
+$disk->cdn()->signature('http://www.test.com/1.mp4', '12345678', 1516680000);
 
 // tencent captcha(plugin support)
 // https://007.qq.com/product.html
