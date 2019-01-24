@@ -240,6 +240,10 @@ $disk->cdn()->refreshDir(['http://your-cdn-host/path/to/']);
 // tencent captcha(plugin support)
 // https://007.qq.com/product.html
 $disk->tcaptcha($aid, $appSecretKey)->verify($ticket, $randStr, $userIP);
+
+// get federation token(plugin support)
+// https://cloud.tencent.com/document/product/598/13896
+$disk->getFederationToken($path = '', $seconds = 7200, Closure $customPolicy = null, $name = 'cos')
 ```
 
 [Full API documentation.](https://laravel.com/api/5.5/Illuminate/Contracts/Filesystem/Cloud.html)
