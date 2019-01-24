@@ -5,6 +5,10 @@ namespace Freyo\Flysystem\QcloudCOSv5\Plugins;
 use Closure;
 use League\Flysystem\Plugin\AbstractPlugin;
 
+/**
+ * Class GetFederationToken
+ * @package Freyo\Flysystem\QcloudCOSv5\Plugins
+ */
 class GetFederationToken extends AbstractPlugin
 {
     /**
@@ -18,6 +22,8 @@ class GetFederationToken extends AbstractPlugin
     }
 
     /**
+     * @see https://cloud.tencent.com/document/product/598/13896
+     *
      * @param string $path
      * @param int $seconds
      * @param Closure $customPolicy
@@ -54,6 +60,8 @@ class GetFederationToken extends AbstractPlugin
     }
 
     /**
+     * @see https://cloud.tencent.com/document/product/436/31923
+     *
      * @param $path
      *
      * @return string
@@ -72,7 +80,7 @@ class GetFederationToken extends AbstractPlugin
                     // 简单上传
                     'name/cos:PutObject',
                     'name/cos:PostObject',
-                    // 分片上传操作
+                    // 分片上传
                     'name/cos:InitiateMultipartUpload',
                     'name/cos:ListParts',
                     'name/cos:UploadPart',
