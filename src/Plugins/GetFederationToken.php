@@ -25,7 +25,7 @@ class GetFederationToken extends AbstractPlugin
      *
      * @return bool|array
      */
-    public function handle($path = '', $seconds = 7200, Closure $customPolicy = null, $name = 'cos')
+    public function handle($path = '*', $seconds = 7200, Closure $customPolicy = null, $name = 'cos')
     {
         $policy = !is_null($customPolicy)
             ? $this->getCustomPolicy($customPolicy, $path)
@@ -71,17 +71,17 @@ class GetFederationToken extends AbstractPlugin
                 'action' => [
                     // 简单上传
                     'name/cos:PutObject',
+                    'name/cos:PostObject',
                     // 分片上传操作
                     'name/cos:InitiateMultipartUpload',
-                    'name/cos:ListMultipartUploads',
                     'name/cos:ListParts',
                     'name/cos:UploadPart',
                     'name/cos:CompleteMultipartUpload',
+                    'name/cos:AbortMultipartUpload',
                 ],
                 'effect' => 'allow',
                 'principal' => ['qcs' => ['*']],
                 'resource' => [
-                    "qcs::cos:$region:uid/$appId:prefix//$appId/$bucket/",
                     "qcs::cos:$region:uid/$appId:prefix//$appId/$bucket/$path",
                 ],
             ],
