@@ -118,7 +118,6 @@ class CDN extends AbstractPlugin
     protected function getHttpClient()
     {
         return new \GuzzleHttp\Client([
-            'verify' => false,
             'base_uri' => 'https://cdn.api.qcloud.com',
         ]);
     }

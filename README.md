@@ -22,7 +22,7 @@
       <image src="https://img.shields.io/packagist/dt/freyo/flysystem-qcloud-cos-v5.svg?style=flat-square" alt="Total Downloads">
     </a>
   </p>
-  <p align="center">This is a Flysystem adapter for the <a href="https://github.com/tencentyun/cos-php-sdk-v5">cos-php-sdk-v5</a>.</p>
+  <p align="center">This is a flysystem adapter for the <a href="https://github.com/tencentyun/cos-php-sdk-v5">cos-php-sdk-v5</a>.</p>
   <p align="center">Tencent Cloud / Cloud Object Storage</p>
   <p align="center">Secure, stable, massive, convenient, low-delay, low-cost cloud storage services</p>
 </div>
@@ -54,7 +54,7 @@
       'connect_timeout' => 60,
       'bucket'          => 'your-bucket-name',
       'cdn'             => '',
-      'scheme'          => 'http',
+      'scheme'          => 'https',
       'read_from_cdn'   => false,
       'cdn_key'         => '',
   ];
@@ -136,7 +136,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'
             'connect_timeout' => env('COSV5_CONNECT_TIMEOUT', 60),
             'bucket'          => env('COSV5_BUCKET'),
             'cdn'             => env('COSV5_CDN'),
-            'scheme'          => env('COSV5_SCHEME', 'http'),
+            'scheme'          => env('COSV5_SCHEME', 'https'),
             'read_from_cdn'   => env('COSV5_READ_FROM_CDN', false),
             'cdn_key'         => env('COSV5_CDN_KEY'),
       ],
@@ -190,8 +190,8 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'
   COSV5_CONNECT_TIMEOUT=60
   COSV5_BUCKET=
   COSV5_REGION=ap-guangzhou
-  COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
-  COSV5_SCHEME=http
+  COSV5_CDN=
+  COSV5_SCHEME=https
   COSV5_READ_FROM_CDN=false
   COSV5_CDN_KEY=
   ```

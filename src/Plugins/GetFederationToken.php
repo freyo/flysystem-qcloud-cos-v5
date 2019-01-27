@@ -139,7 +139,6 @@ class GetFederationToken extends AbstractPlugin
     protected function getHttpClient()
     {
         return new \GuzzleHttp\Client([
-            'verify' => false,
             'base_uri' => 'https://sts.api.qcloud.com',
         ]);
     }

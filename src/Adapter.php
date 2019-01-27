@@ -355,7 +355,6 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     public function getHttpClient()
     {
         return new \GuzzleHttp\Client([
-            'verify'          => false,
             'timeout'         => $this->config['timeout'],
             'connect_timeout' => $this->config['connect_timeout'],
         ]);
