@@ -63,7 +63,7 @@ COS 的可用地域（Region）请参见 [#Region](#region)
       'timeout'         => 60,
       'connect_timeout' => 60,
       'bucket'          => 'your-bucket-name', // without "-APPID"
-      'cdn'             => '', // default: https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
+      'cdn'             => '', // default: https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
       'scheme'          => 'https',
       'read_from_cdn'   => false,
   ];
@@ -240,7 +240,7 @@ $disk->cdn()->refreshDir(['http://your-cdn-host/path/to/']);
 
 // cdn url signature(plugin support)
 // https://cloud.tencent.com/document/product/228/13677
-$disk->cdn()->signature('http://www.test.com/1.mp4', '12345678', 1516680000);
+$disk->cdn()->signature($url = 'http://www.test.com/1.mp4', $key = '12345678', $timestamp = 1516680000);
 
 // tencent captcha(plugin support)
 // https://007.qq.com/product.html
