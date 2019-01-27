@@ -66,6 +66,7 @@ COS 的可用地域（Region）请参见 [#Region](#region)
       'cdn'             => '', // default: https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
       'scheme'          => 'https',
       'read_from_cdn'   => false,
+      'cdn_key'         => '',
   ];
 
   $filesystem = new Filesystem(new Adapter(new Client($config), $config));
@@ -147,6 +148,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'(�
             'cdn'             => env('COSV5_CDN'),
             'scheme'          => env('COSV5_SCHEME', 'https'),
             'read_from_cdn'   => env('COSV5_READ_FROM_CDN', false),
+            'cdn_key'         => env('COSV5_CDN_KEY'),
       ],
   ],
   ```
@@ -164,6 +166,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'(�
   COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
   COSV5_SCHEME=https
   COSV5_READ_FROM_CDN=false
+  COSV5_CDN_KEY=
   ```
 
 ## Use in Lumen
@@ -200,6 +203,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'(�
   COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
   COSV5_SCHEME=https
   COSV5_READ_FROM_CDN=false
+  COSV5_CDN_KEY=
   ```
 
 ### Usage
@@ -240,7 +244,7 @@ $disk->cdn()->refreshDir(['http://your-cdn-host/path/to/']);
 
 // cdn url signature(plugin support)
 // https://cloud.tencent.com/document/product/228/13677
-$disk->cdn()->signature($url = 'http://www.test.com/1.mp4', $key = '12345678', $timestamp = 1516680000);
+$disk->cdn()->signature('http://www.test.com/1.mp4');
 
 // tencent captcha(plugin support)
 // https://007.qq.com/product.html
@@ -251,19 +255,14 @@ $disk->tcaptcha($aid, $appSecretKey)->verify($ticket, $randStr, $userIP);
 $disk->getFederationToken($path = '*', $seconds = 7200, Closure $customPolicy = null, $name = 'cos')
 ```
 
-[Full API documentation.](https://laravel.com/api/5.5/Illuminate/Contracts/Filesystem/Cloud.html)
+> Web 端直传实践
+> https://cloud.tencent.com/document/product/436/9067
+>
+> 移动应用直传实践
+> https://cloud.tencent.com/document/product/436/9068
+
+[Full API documentation.](https://laravel.com/api/5.7/Illuminate/Contracts/Filesystem/Cloud.html)
 
 ## Region
-
-|地区|区域表示|AP|
-|:-:|:-:|:-:|
-|上海（华东）|cn-east / sh|ap-shanghai|
-|广州（华南）|cn-sorth / gz|ap-guangzhou|
-|天津（华北）|cn-north / tj|ap-beijing-1|
-|成都（西南）|cn-southwest / cd|ap-chengdu|
-|新加坡|sg / sgp|ap-singapore|
-|北京|bj|ap-beijing|
-
-Recommend using `ap-*`
 
 [Official Documentation](https://cloud.tencent.com/document/product/436/6224)

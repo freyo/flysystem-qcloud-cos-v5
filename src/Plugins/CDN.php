@@ -31,8 +31,9 @@ class CDN extends AbstractPlugin
      *
      * @return string
      */
-    public function signature($url, $key, $timestamp = null)
+    public function signature($url, $key = null, $timestamp = null)
     {
+        $key = $key ?: $this->getConfig()->get('cdn_key');
         $timestamp = dechex($timestamp ?: time());
 
         $parsed = parse_url($url);
@@ -111,7 +112,7 @@ class CDN extends AbstractPlugin
     protected function buildFormParams(array $values, $key, $action)
     {
         $keys = array_map(function ($n) use ($key) {
-            return sprintf("$key.%d", $n);
+            return sprintf("{$key}.%d", $n);
         }, range(0, count($values) - 1));
 
         $params = array_combine($keys, $values);
@@ -185,5 +186,13 @@ class CDN extends AbstractPlugin
         }
 
         return 0 === $json->code;
+    }
+
+    /**
+     * @return \League\Flysystem\Config
+     */
+    protected function getConfig()
+    {
+        return $this->filesystem->getConfig();
     }
 }

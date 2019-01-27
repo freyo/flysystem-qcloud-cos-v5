@@ -78,6 +78,7 @@ return [
             'cdn'                => env('COSV5_CDN'),
             'scheme'             => env('COSV5_SCHEME', 'https'),
             'read_from_cdn'      => env('COSV5_READ_FROM_CDN', false),
+            'cdn_key'            => env('COSV5_CDN_KEY'),
         ],
 
     ],
