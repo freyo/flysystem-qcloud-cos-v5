@@ -22,20 +22,10 @@
       <image src="https://img.shields.io/packagist/dt/freyo/flysystem-qcloud-cos-v5.svg?style=flat-square" alt="Total Downloads">
     </a>
   </p>
-  <p align="center">This is a Flysystem adapter for the qcloud-cos-sdk-php v5.</p>
-  <p align="center">腾讯云COS对象存储 V5</p>
-  <p align="center">安全稳定、海量、便捷、低延迟、低成本的云端存储服务</p>
+  <p align="center">This is a Flysystem adapter for the <a href="https://github.com/tencentyun/cos-php-sdk-v5">cos-php-sdk-v5</a>.</p>
+  <p align="center">Tencent Cloud / Cloud Object Storage</p>
+  <p align="center">Secure, stable, massive, convenient, low-delay, low-cost cloud storage services</p>
 </div>
-
-## Attention
-
-JSON API 接口与标准 XML 的 API 底层架构相同，数据互通，可以交叉使用，但是接口不兼容，域名不一致。
-
-腾讯云 COS 的 XML API 服务推出后，推荐您使用 XML API 接口， JSON API 接口日后将保持维护状态，可以正常使用但是不发展新特性。
-
-[XML API 与 JSON API 常见问题](https://cloud.tencent.com/document/product/436/6281)
-
-COS 的可用地域（Region）请参见 [#Region](#region)
 
 ## Installation
 
@@ -62,14 +52,16 @@ COS 的可用地域（Region）请参见 [#Region](#region)
       ],
       'timeout'         => 60,
       'connect_timeout' => 60,
-      'bucket'          => 'your-bucket-name', // without "-APPID"
-      'cdn'             => '', // default: https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
-      'scheme'          => 'https',
+      'bucket'          => 'your-bucket-name',
+      'cdn'             => '',
+      'scheme'          => 'http',
       'read_from_cdn'   => false,
       'cdn_key'         => '',
   ];
-
-  $filesystem = new Filesystem(new Adapter(new Client($config), $config));
+  
+  $client     = new Client($config);
+  $adapter    = new Adapter($client, $config);
+  $filesystem = new Filesystem($adapter);
   ```
 
 ### API
@@ -109,10 +101,8 @@ int $flysystem->getTimestamp('file.md');
 
 string $flysystem->getVisibility('file.md');
 
-bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'(继承 Bucket 权限)
+bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'
 ```
-
-> 注：当前访问策略条目限制为 1000 条，如果您不需要进行 Object ACL 控制，请填 default 或者此项不进行设置，默认继承 Bucket 权限。
 
 [Full API documentation.](http://flysystem.thephpleague.com/api/)
 
@@ -146,7 +136,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'(�
             'connect_timeout' => env('COSV5_CONNECT_TIMEOUT', 60),
             'bucket'          => env('COSV5_BUCKET'),
             'cdn'             => env('COSV5_CDN'),
-            'scheme'          => env('COSV5_SCHEME', 'https'),
+            'scheme'          => env('COSV5_SCHEME', 'http'),
             'read_from_cdn'   => env('COSV5_READ_FROM_CDN', false),
             'cdn_key'         => env('COSV5_CDN_KEY'),
       ],
@@ -163,7 +153,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'(�
   COSV5_CONNECT_TIMEOUT=60
   COSV5_BUCKET=
   COSV5_REGION=ap-guangzhou
-  COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
+  COSV5_CDN=
   COSV5_SCHEME=https
   COSV5_READ_FROM_CDN=false
   COSV5_CDN_KEY=
@@ -201,7 +191,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'(�
   COSV5_BUCKET=
   COSV5_REGION=ap-guangzhou
   COSV5_CDN= #https://{your-bucket-name}-{your-app-id}.file.myqcloud.com
-  COSV5_SCHEME=https
+  COSV5_SCHEME=http
   COSV5_READ_FROM_CDN=false
   COSV5_CDN_KEY=
   ```
@@ -238,31 +228,22 @@ $disk->putRemoteFile('avatars/1', 'http://example.org/avatar.jpg');
 $disk->putRemoteFileAs('avatars/1', 'http://example.org/avatar.jpg', 'file1.jpg');
 
 // refresh cdn cache(plugin support)
-// https://cloud.tencent.com/document/product/228/3946
 $disk->cdn()->refreshUrl(['http://your-cdn-host/path/to/avatar.jpg']);
 $disk->cdn()->refreshDir(['http://your-cdn-host/path/to/']);
+$disk->cdn()->pushUrl(['http://your-cdn-host/path/to/avatar.jpg']);
 
 // cdn url signature(plugin support)
-// https://cloud.tencent.com/document/product/228/13677
 $disk->cdn()->signature('http://www.test.com/1.mp4');
 
 // tencent captcha(plugin support)
-// https://007.qq.com/product.html
 $disk->tcaptcha($aid, $appSecretKey)->verify($ticket, $randStr, $userIP);
 
 // get federation token(plugin support)
-// https://cloud.tencent.com/document/product/598/13896
 $disk->getFederationToken($path = '*', $seconds = 7200, Closure $customPolicy = null, $name = 'cos')
 ```
 
-> Web 端直传实践
-> https://cloud.tencent.com/document/product/436/9067
->
-> 移动应用直传实践
-> https://cloud.tencent.com/document/product/436/9068
-
 [Full API documentation.](https://laravel.com/api/5.7/Illuminate/Contracts/Filesystem/Cloud.html)
 
-## Region
+## Regions & Endpoints
 
-[Official Documentation](https://cloud.tencent.com/document/product/436/6224)
+[Official Documentation](https://intl.cloud.tencent.com/document/product/436/6224)
