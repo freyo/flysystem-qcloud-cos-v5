@@ -52,6 +52,18 @@ class CDN extends AbstractPlugin
      *
      * @return bool
      */
+    public function pushUrl($url)
+    {
+        $urls = is_array($url) ? $url : func_get_args();
+
+        return $this->request($urls, 'urls', 'CdnPusherV2');
+    }
+
+    /**
+     * @param $url
+     *
+     * @return bool
+     */
     public function refreshUrl($url)
     {
         $urls = is_array($url) ? $url : func_get_args();
