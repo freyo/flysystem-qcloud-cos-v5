@@ -37,11 +37,8 @@ class CDN extends AbstractPlugin
         $timestamp = dechex($timestamp ?: time());
 
         $parsed = parse_url($url);
-
         $signature = md5($key . $parsed['path'] . $timestamp);
-
         $query = http_build_query(['sign' => $signature, 't' => $timestamp]);
-
         $separator = empty($parsed['query']) ? '?' : '&';
 
         return $url . $separator . $query;
@@ -50,9 +47,21 @@ class CDN extends AbstractPlugin
     /**
      * @param $url
      *
-     * @return bool
+     * @return array
      */
     public function pushUrl($url)
+    {
+        $urls = is_array($url) ? $url : func_get_args();
+
+        return $this->request($urls, 'urls', 'CdnUrlPusher');
+    }
+
+    /**
+     * @param $url
+     *
+     * @return array
+     */
+    public function pushUrlV2($url)
     {
         $urls = is_array($url) ? $url : func_get_args();
 
@@ -62,7 +71,7 @@ class CDN extends AbstractPlugin
     /**
      * @param $url
      *
-     * @return bool
+     * @return array
      */
     public function refreshUrl($url)
     {
@@ -74,7 +83,7 @@ class CDN extends AbstractPlugin
     /**
      * @param $dir
      *
-     * @return bool
+     * @return array
      */
     public function refreshDir($dir)
     {
@@ -88,7 +97,7 @@ class CDN extends AbstractPlugin
      * @param string $key
      * @param string $action
      *
-     * @return bool
+     * @return array
      */
     protected function request(array $args, $key, $action)
     {
@@ -155,7 +164,7 @@ class CDN extends AbstractPlugin
      */
     protected function getCredentials()
     {
-        return $this->filesystem->getConfig()->get('credentials');
+        return $this->getConfig()->get('credentials');
     }
 
     /**
@@ -187,17 +196,13 @@ class CDN extends AbstractPlugin
     /**
      * @param string $contents
      *
-     * @return bool
+     * @return array
+     *
+     * @throws \InvalidArgumentException if the JSON cannot be decoded.
      */
     protected function normalize($contents)
     {
-        $json = json_decode($contents);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return false;
-        }
-
-        return 0 === $json->code;
+        return \GuzzleHttp\json_decode($contents, true);
     }
 
     /**
