@@ -42,7 +42,7 @@ class CDNSignatureTest extends TestCase
     }
 
     /**
-     * @param Filesystem $filesystem
+     * @dataProvider Provider
      */
     public function testSignature(Filesystem $filesystem)
     {
