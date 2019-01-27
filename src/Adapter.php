@@ -128,7 +128,10 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
 
         $url = parse_url($objectUrl);
 
-        return sprintf('%s://%s%s', $url['scheme'], $url['host'], urldecode($url['path']));
+        return sprintf(
+            '%s://%s%s',
+            $url['scheme'], $url['host'], rawurldecode($url['path'])
+        );
     }
 
     /**
@@ -140,8 +143,10 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getTemporaryUrl($path, DateTimeInterface $expiration, array $options = [])
     {
-        $options = array_merge($options,
-            ['Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http']);
+        $options = array_merge(
+            $options,
+            ['Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http']
+        );
 
         $objectUrl = $this->client->getObjectUrl(
             $this->getBucket(), $path, $expiration->format('c'), $options
@@ -149,11 +154,10 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
 
         $url = parse_url($objectUrl);
 
-        if ($this->config['cdn']) {
-            return $this->config['cdn'].urldecode($url['path']).'?'.$url['query'];
-        }
-
-        return sprintf('%s://%s%s?%s', $url['scheme'], $url['host'], urldecode($url['path']), $url['query']);
+        return sprintf(
+            '%s://%s%s?%s',
+            $url['scheme'], $url['host'], rawurldecode($url['path']), $url['query']
+        );
     }
 
     /**
