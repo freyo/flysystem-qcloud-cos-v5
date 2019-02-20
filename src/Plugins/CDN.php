@@ -27,7 +27,7 @@ class CDN extends AbstractPlugin
     /**
      * @param string $url
      * @param string $key
-     * @param int $timestamp
+     * @param int    $timestamp
      *
      * @return string
      */
@@ -37,11 +37,11 @@ class CDN extends AbstractPlugin
         $timestamp = dechex($timestamp ?: time());
 
         $parsed = parse_url($url);
-        $signature = md5($key . $parsed['path'] . $timestamp);
+        $signature = md5($key.$parsed['path'].$timestamp);
         $query = http_build_query(['sign' => $signature, 't' => $timestamp]);
         $separator = empty($parsed['query']) ? '?' : '&';
 
-        return $url . $separator . $query;
+        return $url.$separator.$query;
     }
 
     /**
@@ -93,7 +93,7 @@ class CDN extends AbstractPlugin
     }
 
     /**
-     * @param array $args
+     * @param array  $args
      * @param string $key
      * @param string $action
      *
@@ -123,7 +123,7 @@ class CDN extends AbstractPlugin
     }
 
     /**
-     * @param array $values
+     * @param array  $values
      * @param string $key
      * @param string $action
      *
@@ -143,7 +143,7 @@ class CDN extends AbstractPlugin
     }
 
     /**
-     * @param array $params
+     * @param array  $params
      * @param string $action
      *
      * @return array
@@ -151,10 +151,10 @@ class CDN extends AbstractPlugin
     protected function addCommonParams(array $params, $action)
     {
         return array_merge([
-            'Action' => $action,
-            'SecretId' => $this->getCredentials()['secretId'],
+            'Action'    => $action,
+            'SecretId'  => $this->getCredentials()['secretId'],
             'Timestamp' => time(),
-            'Nonce' => rand(1, 65535),
+            'Nonce'     => rand(1, 65535),
         ], $params);
     }
 
@@ -187,7 +187,7 @@ class CDN extends AbstractPlugin
     {
         ksort($params);
 
-        $srcStr = 'POSTcdn.api.qcloud.com/v2/index.php?' . urldecode(http_build_query($params));
+        $srcStr = 'POSTcdn.api.qcloud.com/v2/index.php?'.urldecode(http_build_query($params));
 
         return base64_encode(hash_hmac('sha1', $srcStr, $this->getCredentials()['secretKey'], true));
     }
@@ -195,9 +195,9 @@ class CDN extends AbstractPlugin
     /**
      * @param string $contents
      *
-     * @return array
-     *
      * @throws \InvalidArgumentException if the JSON cannot be decoded.
+     *
+     * @return array
      */
     protected function normalize($contents)
     {

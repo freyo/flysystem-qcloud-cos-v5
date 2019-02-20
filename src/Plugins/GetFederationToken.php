@@ -6,8 +6,7 @@ use Closure;
 use League\Flysystem\Plugin\AbstractPlugin;
 
 /**
- * Class GetFederationToken
- * @package Freyo\Flysystem\QcloudCOSv5\Plugins
+ * Class GetFederationToken.
  */
 class GetFederationToken extends AbstractPlugin
 {
@@ -24,10 +23,10 @@ class GetFederationToken extends AbstractPlugin
     /**
      * @see https://cloud.tencent.com/document/product/598/13896
      *
-     * @param string $path
-     * @param int $seconds
+     * @param string  $path
+     * @param int     $seconds
      * @param Closure $customPolicy
-     * @param string $name
+     * @param string  $name
      *
      * @return bool|array
      */
@@ -39,8 +38,8 @@ class GetFederationToken extends AbstractPlugin
 
         $params = [
             'durationSeconds' => $seconds,
-            'name' => $name,
-            'policy' => urlencode($policy)
+            'name'            => $name,
+            'policy'          => urlencode($policy),
         ];
 
         return $this->request($params, 'GetFederationToken');
@@ -74,7 +73,7 @@ class GetFederationToken extends AbstractPlugin
         $bucket = $this->getConfig()->get('bucket');
 
         $policy = [
-            'version' => '2.0',
+            'version'   => '2.0',
             'statement' => [
                 'action' => [
                     // 简单上传
@@ -87,9 +86,9 @@ class GetFederationToken extends AbstractPlugin
                     'name/cos:CompleteMultipartUpload',
                     'name/cos:AbortMultipartUpload',
                 ],
-                'effect' => 'allow',
+                'effect'    => 'allow',
                 'principal' => ['qcs' => ['*']],
-                'resource' => [
+                'resource'  => [
                     "qcs::cos:$region:uid/$appId:prefix//$appId/$bucket/$path",
                 ],
             ],
@@ -144,7 +143,7 @@ class GetFederationToken extends AbstractPlugin
     }
 
     /**
-     * @param array $params
+     * @param array  $params
      * @param string $action
      *
      * @return array
@@ -157,7 +156,7 @@ class GetFederationToken extends AbstractPlugin
     }
 
     /**
-     * @param array $params
+     * @param array  $params
      * @param string $action
      *
      * @return array
@@ -165,11 +164,11 @@ class GetFederationToken extends AbstractPlugin
     protected function addCommonParams(array $params, $action)
     {
         return array_merge([
-            'Region' => $this->getConfig()->get('region'),
-            'Action' => $action,
-            'SecretId' => $this->getCredentials()['secretId'],
+            'Region'    => $this->getConfig()->get('region'),
+            'Action'    => $action,
+            'SecretId'  => $this->getCredentials()['secretId'],
             'Timestamp' => time(),
-            'Nonce' => rand(1, 65535),
+            'Nonce'     => rand(1, 65535),
         ], $params);
     }
 
@@ -194,7 +193,7 @@ class GetFederationToken extends AbstractPlugin
     {
         ksort($params);
 
-        $srcStr = 'POSTsts.api.qcloud.com/v2/index.php?' . urldecode(http_build_query($params));
+        $srcStr = 'POSTsts.api.qcloud.com/v2/index.php?'.urldecode(http_build_query($params));
 
         return base64_encode(hash_hmac('sha1', $srcStr, $this->getCredentials()['secretKey'], true));
     }
