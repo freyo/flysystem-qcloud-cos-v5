@@ -335,7 +335,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         try {
             if (isset($this->config['read_from_cdn']) && $this->config['read_from_cdn']) {
                 $response = $this->getHttpClient()
-                                 ->get($this->getTemporaryUrl($path, Carbon::now()->addMinutes(5)))
+                                 ->get($this->applyPathPrefix($path))
                                  ->getBody()
                                  ->getContents();
             } else {
