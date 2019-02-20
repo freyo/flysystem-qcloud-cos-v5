@@ -13,19 +13,19 @@ class CDNSignatureTest extends TestCase
     public function Provider()
     {
         $config = [
-            'region' => getenv('COSV5_REGION'),
+            'region'      => getenv('COSV5_REGION'),
             'credentials' => [
-                'appId' => getenv('COSV5_APP_ID'),
-                'secretId' => getenv('COSV5_SECRET_ID'),
+                'appId'     => getenv('COSV5_APP_ID'),
+                'secretId'  => getenv('COSV5_SECRET_ID'),
                 'secretKey' => getenv('COSV5_SECRET_KEY'),
             ],
-            'timeout' => getenv('COSV5_TIMEOUT'),
+            'timeout'         => getenv('COSV5_TIMEOUT'),
             'connect_timeout' => getenv('COSV5_CONNECT_TIMEOUT'),
-            'bucket' => getenv('COSV5_BUCKET'),
-            'cdn' => getenv('COSV5_CDN'),
-            'scheme' => getenv('COSV5_SCHEME'),
-            'read_from_cdn' => getenv('COSV5_READ_FROM_CDN'),
-            'cdn_key' => getenv('COSV5_CDN_KEY'),
+            'bucket'          => getenv('COSV5_BUCKET'),
+            'cdn'             => getenv('COSV5_CDN'),
+            'scheme'          => getenv('COSV5_SCHEME'),
+            'read_from_cdn'   => getenv('COSV5_READ_FROM_CDN'),
+            'cdn_key'         => getenv('COSV5_CDN_KEY'),
         ];
 
         $client = new Client($config);

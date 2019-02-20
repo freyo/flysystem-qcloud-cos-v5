@@ -31,7 +31,7 @@ class TCaptcha extends AbstractPlugin
      */
     public function handle($aid, $appSecretKey)
     {
-        $this->aid          = $aid;
+        $this->aid = $aid;
         $this->appSecretKey = $appSecretKey;
 
         return $this;

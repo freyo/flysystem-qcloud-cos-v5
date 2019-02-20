@@ -119,7 +119,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         }
 
         $options = [
-            'Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http'
+            'Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http',
         ];
 
         $objectUrl = $this->client->getObjectUrl(
@@ -265,19 +265,9 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function deleteDir($dirname)
     {
-        $response = $this->listObjects($dirname);
-
-        if (!isset($response['Contents'])) {
-            return true;
-        }
-
-        $keys = array_map(function ($item) {
-            return ['Key' => $item['Key']];
-        }, (array) $response['Contents']);
-
-        return (bool) $this->client->deleteObjects([
+        return (bool) $this->client->deleteObject([
             'Bucket'  => $this->getBucket(),
-            'Objects' => $keys,
+            'Key'     => $dirname.'/',
         ]);
     }
 
@@ -335,7 +325,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         try {
             if (isset($this->config['read_from_cdn']) && $this->config['read_from_cdn']) {
                 $response = $this->getHttpClient()
-                                 ->get($this->getTemporaryUrl($path, Carbon::now()->addMinutes(5)))
+                                 ->get($this->applyPathPrefix($path))
                                  ->getBody()
                                  ->getContents();
             } else {
@@ -345,7 +335,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
                 ])->get('Body');
             }
 
-            return ['contents' => (string)$response];
+            return ['contents' => (string) $response];
         } catch (NoSuchKeyException $e) {
             return false;
         } catch (\GuzzleHttp\Exception\ClientException $e) {
