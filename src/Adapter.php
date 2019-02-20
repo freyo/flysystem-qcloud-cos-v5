@@ -119,7 +119,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         }
 
         $options = [
-            'Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http'
+            'Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http',
         ];
 
         $objectUrl = $this->client->getObjectUrl(
@@ -345,7 +345,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
                 ])->get('Body');
             }
 
-            return ['contents' => (string)$response];
+            return ['contents' => (string) $response];
         } catch (NoSuchKeyException $e) {
             return false;
         } catch (\GuzzleHttp\Exception\ClientException $e) {

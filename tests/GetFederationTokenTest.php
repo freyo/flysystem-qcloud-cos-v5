@@ -13,18 +13,18 @@ class GetFederationTokenTest extends TestCase
     public function Provider()
     {
         $config = [
-            'region' => getenv('COSV5_REGION'),
+            'region'      => getenv('COSV5_REGION'),
             'credentials' => [
-                'appId' => getenv('COSV5_APP_ID'),
-                'secretId' => getenv('COSV5_SECRET_ID'),
+                'appId'     => getenv('COSV5_APP_ID'),
+                'secretId'  => getenv('COSV5_SECRET_ID'),
                 'secretKey' => getenv('COSV5_SECRET_KEY'),
             ],
-            'timeout' => getenv('COSV5_TIMEOUT'),
+            'timeout'         => getenv('COSV5_TIMEOUT'),
             'connect_timeout' => getenv('COSV5_CONNECT_TIMEOUT'),
-            'bucket' => getenv('COSV5_BUCKET'),
-            'cdn' => getenv('COSV5_CDN'),
-            'scheme' => getenv('COSV5_SCHEME'),
-            'read_from_cdn' => getenv('COSV5_READ_FROM_CDN'),
+            'bucket'          => getenv('COSV5_BUCKET'),
+            'cdn'             => getenv('COSV5_CDN'),
+            'scheme'          => getenv('COSV5_SCHEME'),
+            'read_from_cdn'   => getenv('COSV5_READ_FROM_CDN'),
         ];
 
         $client = new Client($config);
@@ -59,15 +59,16 @@ class GetFederationTokenTest extends TestCase
                 $appId = $config->get('credentials')['appId'];
                 $region = $config->get('region');
                 $bucket = $config->get('bucket');
+
                 return [
-                    'version' => '2.0',
+                    'version'   => '2.0',
                     'statement' => [
                         'action' => [
                             'name/cos:PutObject',
                         ],
-                        'effect' => 'allow',
+                        'effect'    => 'allow',
                         'principal' => ['qcs' => ['*']],
-                        'resource' => [
+                        'resource'  => [
                             "qcs::cos:$region:uid/$appId:prefix//$appId/$bucket/$path",
                         ],
                     ],
