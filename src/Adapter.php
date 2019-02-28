@@ -286,7 +286,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
 
         return (bool) $this->client->deleteObjects([
             'Bucket' => $this->getBucket(),
-            'Key' => $keys,
+            'Key'    => $keys,
         ]);
     }
 
