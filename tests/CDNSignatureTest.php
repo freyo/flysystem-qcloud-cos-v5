@@ -51,4 +51,48 @@ class CDNSignatureTest extends TestCase
             $filesystem->cdn()->signature('http://www.test.com/1.mp4', null, 1516680000)
         );
     }
+
+    /**
+     * @dataProvider Provider
+     */
+    public function testSignatureA(Filesystem $filesystem)
+    {
+        $this->assertSame(
+            'http://www.test.com/1.mp4?sign=1516680000-e9pmhkb21sjqfeh33f9-0-9a15f74f326dbb6dd485911eb0d9c629',
+            $filesystem->cdn()->signatureA('http://www.test.com/1.mp4', null, 1516680000, 'e9pmhkb21sjqfeh33f9')
+        );
+    }
+
+    /**
+     * @dataProvider Provider
+     */
+    public function testSignatureB(Filesystem $filesystem)
+    {
+        $this->assertSame(
+            'http://www.test.com/201801230400/8eee4e932f285743fa23c79030139459/1.mp4',
+            $filesystem->cdn()->signatureB('http://www.test.com/1.mp4', null, 1516680000)
+        );
+    }
+
+    /**
+     * @dataProvider Provider
+     */
+    public function testSignatureC(Filesystem $filesystem)
+    {
+        $this->assertSame(
+            'http://www.test.com/8fe5c42d7b0dfa7afabef2a33cd96459/5a66b340/1.mp4',
+            $filesystem->cdn()->signatureC('http://www.test.com/1.mp4', null, 1516680000)
+        );
+    }
+
+    /**
+     * @dataProvider Provider
+     */
+    public function testSignatureD(Filesystem $filesystem)
+    {
+        $this->assertSame(
+            'http://www.test.com/1.mp4?sign=8fe5c42d7b0dfa7afabef2a33cd96459&t=5a66b340',
+            $filesystem->cdn()->signatureD('http://www.test.com/1.mp4', null, 1516680000)
+        );
+    }
 }

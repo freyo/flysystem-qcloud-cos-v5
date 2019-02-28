@@ -28,20 +28,102 @@ class CDN extends AbstractPlugin
      * @param string $url
      * @param string $key
      * @param int    $timestamp
+     * @param string $signName
+     * @param string $timeName
      *
      * @return string
      */
-    public function signature($url, $key = null, $timestamp = null)
+    public function signature($url, $key = null, $timestamp = null, $signName = 'sign', $timeName = 't')
     {
         $key = $key ?: $this->getConfig()->get('cdn_key');
         $timestamp = dechex($timestamp ?: time());
 
         $parsed = parse_url($url);
         $signature = md5($key.$parsed['path'].$timestamp);
-        $query = http_build_query(['sign' => $signature, 't' => $timestamp]);
+        $query = http_build_query([$signName => $signature, $timeName => $timestamp]);
         $separator = empty($parsed['query']) ? '?' : '&';
 
         return $url.$separator.$query;
+    }
+
+    /**
+     * @param string $url
+     * @param string $key
+     * @param int    $timestamp
+     * @param string $random
+     * @param string $signName
+     *
+     * @return string
+     */
+    public function signatureA($url, $key = null, $timestamp = null, $random = null, $signName = 'sign')
+    {
+        $key = $key ?: $this->getConfig()->get('cdn_key');
+        $timestamp = $timestamp ?: time();
+        $random = $random ?: sha1(uniqid('', true));
+
+        $parsed = parse_url($url);
+        $hash = md5(sprintf('%s-%s-%s-%s-%s', $parsed['path'], $timestamp, $random, 0, $key));
+        $signature = sprintf('%s-%s-%s-%s', $timestamp, $random, 0, $hash);
+        $query = http_build_query([$signName => $signature]);
+        $separator = empty($parsed['query']) ? '?' : '&';
+
+        return $url.$separator.$query;
+    }
+
+    /**
+     * @param string $url
+     * @param string $key
+     * @param int    $timestamp
+     *
+     * @return string
+     */
+    public function signatureB($url, $key = null, $timestamp = null)
+    {
+        $key = $key ?: $this->getConfig()->get('cdn_key');
+        $timestamp = date('YmdHi', $timestamp ?: time());
+
+        $parsed = parse_url($url);
+        $hash = md5($key.$timestamp.$parsed['path']);
+
+        return sprintf(
+            '%s://%s/%s/%s%s',
+            $parsed['scheme'], $parsed['host'], $timestamp, $hash, $parsed['path']
+        );
+    }
+
+    /**
+     * @param string $url
+     * @param string $key
+     * @param int    $timestamp
+     *
+     * @return string
+     */
+    public function signatureC($url, $key = null, $timestamp = null)
+    {
+        $key = $key ?: $this->getConfig()->get('cdn_key');
+        $timestamp = dechex($timestamp ?: time());
+
+        $parsed = parse_url($url);
+        $hash = md5($key.$parsed['path'].$timestamp);
+
+        return sprintf(
+            '%s://%s/%s/%s%s',
+            $parsed['scheme'], $parsed['host'], $hash, $timestamp, $parsed['path']
+        );
+    }
+
+    /**
+     * @param string $url
+     * @param string $key
+     * @param int    $timestamp
+     * @param string $signName
+     * @param string $timeName
+     *
+     * @return string
+     */
+    public function signatureD($url, $key = null, $timestamp = null, $signName = 'sign', $timeName = 't')
+    {
+        return $this->signature($url, $key, $timestamp, $signName, $timeName);
     }
 
     /**
