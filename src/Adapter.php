@@ -271,18 +271,18 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             return true;
         }
 
-        $keys = array_map(function ($item) {
-            return ['Key' => $item['Key']];
-        }, (array) $response['Contents']);
-
         // ignore directory
-        $keys = array_filter($keys, function ($item) {
+        $keys = array_filter((array) $response['Contents'], function ($item) {
             return substr($item['Key'], -1) !== '/';
         });
 
         if (empty($keys)) {
             return true;
         }
+
+        $keys = array_map(function ($item) {
+            return ['Key' => $item['Key']];
+        }, $keys);
 
         return (bool) $this->client->deleteObjects([
             'Bucket' => $this->getBucket(),
