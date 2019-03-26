@@ -231,6 +231,9 @@ $disk->putRemoteFileAs('avatars/1', 'http://example.org/avatar.jpg', 'file1.jpg'
 $disk->cdn()->refreshUrl(['http://your-cdn-host/path/to/avatar.jpg']);
 $disk->cdn()->refreshDir(['http://your-cdn-host/path/to/']);
 $disk->cdn()->pushUrl(['http://your-cdn-host/path/to/avatar.jpg']);
+$disk->cdn()->refreshOverseaUrl(['http://your-cdn-host/path/to/avatar.jpg']);
+$disk->cdn()->refreshOverseaDir(['http://your-cdn-host/path/to/']);
+$disk->cdn()->pushOverseaUrl(['http://your-cdn-host/path/to/avatar.jpg']);
 
 // cdn url signature(plugin support)
 $disk->cdn()->signature('http://www.test.com/1.mp4');
