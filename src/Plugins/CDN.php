@@ -35,15 +35,7 @@ class CDN extends AbstractPlugin
      */
     public function signature($url, $key = null, $timestamp = null, $signName = 'sign', $timeName = 't')
     {
-        $key = $key ?: $this->getConfig()->get('cdn_key');
-        $timestamp = dechex($timestamp ?: time());
-
-        $parsed = parse_url($url);
-        $signature = md5($key.$parsed['path'].$timestamp);
-        $query = http_build_query([$signName => $signature, $timeName => $timestamp]);
-        $separator = empty($parsed['query']) ? '?' : '&';
-
-        return $url.$separator.$query;
+        return $this->signatureD($url, $key, $timestamp, $signName, $timeName);
     }
 
     /**
@@ -123,7 +115,15 @@ class CDN extends AbstractPlugin
      */
     public function signatureD($url, $key = null, $timestamp = null, $signName = 'sign', $timeName = 't')
     {
-        return $this->signature($url, $key, $timestamp, $signName, $timeName);
+        $key = $key ?: $this->getConfig()->get('cdn_key');
+        $timestamp = dechex($timestamp ?: time());
+
+        $parsed = parse_url($url);
+        $signature = md5($key.$parsed['path'].$timestamp);
+        $query = http_build_query([$signName => $signature, $timeName => $timestamp]);
+        $separator = empty($parsed['query']) ? '?' : '&';
+
+        return $url.$separator.$query;
     }
 
     /**
@@ -136,6 +136,18 @@ class CDN extends AbstractPlugin
         $urls = is_array($url) ? $url : func_get_args();
 
         return $this->request($urls, 'urls', 'CdnUrlPusher');
+    }
+
+    /**
+     * @param $url
+     *
+     * @return array
+     */
+    public function pushOverseaUrl($url)
+    {
+        $urls = is_array($url) ? $url : func_get_args();
+
+        return $this->request($urls, 'urls', 'CdnOverseaPushser');
     }
 
     /**
@@ -163,6 +175,18 @@ class CDN extends AbstractPlugin
     }
 
     /**
+     * @param $url
+     *
+     * @return array
+     */
+    public function refreshOverseaUrl($url)
+    {
+        $urls = is_array($url) ? $url : func_get_args();
+
+        return $this->request($urls, 'urls', 'RefreshCdnOverSeaUrl');
+    }
+
+    /**
      * @param $dir
      *
      * @return array
@@ -172,6 +196,18 @@ class CDN extends AbstractPlugin
         $dirs = is_array($dir) ? $dir : func_get_args();
 
         return $this->request($dirs, 'dirs', 'RefreshCdnDir');
+    }
+
+    /**
+     * @param $dir
+     *
+     * @return array
+     */
+    public function refreshOverseaDir($dir)
+    {
+        $dirs = is_array($dir) ? $dir : func_get_args();
+
+        return $this->request($dirs, 'dirs', 'RefreshCdnOverSeaDir');
     }
 
     /**
