@@ -126,12 +126,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             $this->getBucket(), $path, null, $options
         );
 
-        $url = parse_url($objectUrl);
-
-        return sprintf(
-            '%s://%s%s',
-            $url['scheme'], $url['host'], rawurldecode($url['path'])
-        );
+        return $objectUrl;
     }
 
     /**
@@ -152,12 +147,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             $this->getBucket(), $path, $expiration->format('c'), $options
         );
 
-        $url = parse_url($objectUrl);
-
-        return sprintf(
-            '%s://%s%s?%s',
-            $url['scheme'], $url['host'], rawurldecode($url['path']), $url['query']
-        );
+        return $objectUrl;
     }
 
     /**
@@ -346,17 +336,9 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     public function read($path)
     {
         try {
-            if (isset($this->config['read_from_cdn']) && $this->config['read_from_cdn']) {
-                $response = $this->getHttpClient()
-                                 ->get($this->applyPathPrefix($path))
-                                 ->getBody()
-                                 ->getContents();
-            } else {
-                $response = $this->client->getObject([
-                    'Bucket' => $this->getBucket(),
-                    'Key'    => $path,
-                ])->get('Body');
-            }
+            $response = $this->forceReadFromCDN()
+                ? $this->readFromCDN($path)
+                : $this->readFromSource($path);
 
             return ['contents' => (string) $response];
         } catch (NoSuchKeyException $e) {
@@ -364,6 +346,42 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             return false;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function forceReadFromCDN()
+    {
+        return $this->config['cdn']
+            && isset($this->config['read_from_cdn'])
+            && $this->config['read_from_cdn'];
+    }
+
+    /**
+     * @param $path
+     *
+     * @return string
+     */
+    protected function readFromCDN($path)
+    {
+        return $this->getHttpClient()
+            ->get($this->applyPathPrefix($path))
+            ->getBody()
+            ->getContents();
+    }
+
+    /**
+     * @param $path
+     *
+     * @return string
+     */
+    protected function readFromSource($path)
+    {
+        return $this->client->getObject([
+            'Bucket' => $this->getBucket(),
+            'Key'    => $path,
+        ])->get('Body');
     }
 
     /**
