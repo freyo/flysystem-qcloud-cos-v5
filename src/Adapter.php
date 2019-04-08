@@ -257,31 +257,12 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function deleteDir($dirname)
     {
-        $response = $this->listObjects($dirname);
-
-        if (!isset($response['Contents'])) {
-            return true;
-        }
-
-        $keys = array_filter((array) $response['Contents'], function ($item) {
-            if ($isDir = substr($item['Key'], -1) === '/') {
-                $this->delete($item['Key']);
-            }
-            return !$isDir;
-        });
-
-        if (empty($keys)) {
-            return true;
-        }
-
-        $keys = array_map(function ($item) {
-            return ['Key' => $item['Key']];
-        }, $keys);
-
-        return (bool) $this->client->deleteObjects([
+        $result = $this->client->deleteObject([
             'Bucket' => $this->getBucket(),
-            'Objects' => $keys,
+            'Key'    => $dirname.'/',
         ]);
+
+        return (bool) $result;
     }
 
     /**
