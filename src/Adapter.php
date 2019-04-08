@@ -252,10 +252,12 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function delete($path)
     {
-        return (bool) $this->client->deleteObject([
+        $result = $this->client->deleteObject([
             'Bucket' => $this->getBucket(),
             'Key'    => $path,
         ]);
+
+        return (bool) $result;
     }
 
     /**
@@ -271,9 +273,11 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             return true;
         }
 
-        // ignore directory
         $keys = array_filter((array) $response['Contents'], function ($item) {
-            return substr($item['Key'], -1) !== '/';
+            if ($isDir = substr($item['Key'], -1) === '/') {
+                $this->delete($item['Key']);
+            }
+            return !$isDir;
         });
 
         if (empty($keys)) {
@@ -286,7 +290,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
 
         return (bool) $this->client->deleteObjects([
             'Bucket' => $this->getBucket(),
-            'Key'    => $keys,
+            'Objects' => $keys,
         ]);
     }
 
