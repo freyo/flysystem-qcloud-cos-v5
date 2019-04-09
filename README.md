@@ -236,7 +236,11 @@ $disk->cdn()->refreshOverseaDir(['http://your-cdn-host/path/to/']);
 $disk->cdn()->pushOverseaUrl(['http://your-cdn-host/path/to/avatar.jpg']);
 
 // cdn url signature(plugin support)
-$disk->cdn()->signature('http://www.test.com/1.mp4');
+$url = 'http://www.test.com/1.mp4';
+$disk->cdn()->signatureA($url, $key = null, $timestamp = null, $random = null, $signName = 'sign');
+$disk->cdn()->signatureB($url, $key = null, $timestamp = null);
+$disk->cdn()->signatureC($url, $key = null, $timestamp = null);
+$disk->cdn()->signatureD($url, $key = null, $timestamp = null, $signName = 'sign', $timeName = 't');
 
 // tencent captcha(plugin support)
 $disk->tcaptcha($aid, $appSecretKey)->verify($ticket, $randStr, $userIP);
