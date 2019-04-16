@@ -539,6 +539,10 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     {
         $options = [];
 
+        if (isset($this->config['encrypt']) && $this->config['encrypt']) {
+            $options['params']['ServerSideEncryption'] = 'AES256';
+        }
+
         if ($config->has('params')) {
             $options['params'] = $config->get('params');
         }

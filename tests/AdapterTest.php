@@ -25,6 +25,7 @@ class AdapterTest extends TestCase
             'cdn'             => getenv('COSV5_CDN'),
             'scheme'          => getenv('COSV5_SCHEME'),
             'read_from_cdn'   => getenv('COSV5_READ_FROM_CDN'),
+            'encrypt'         => getenv('COSV5_ENCRYPT'),
         ];
 
         $cosApi = new Client($config);
@@ -45,7 +46,11 @@ class AdapterTest extends TestCase
      */
     public function testWrite(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertTrue((bool) $adapter->write("foo/{$options['machineId']}/foo.md", 'content', new Config()));
+        $this->assertTrue((bool) $adapter->write(
+            "foo/{$options['machineId']}/foo.md",
+            'content',
+            new Config()
+        ));
     }
 
     /**
@@ -55,7 +60,11 @@ class AdapterTest extends TestCase
     {
         $temp = tmpfile();
         fwrite($temp, 'writing to tempfile');
-        $this->assertTrue((bool) $adapter->writeStream("foo/{$options['machineId']}/bar.md", $temp, new Config()));
+        $this->assertTrue((bool) $adapter->writeStream(
+            "foo/{$options['machineId']}/bar.md",
+            $temp,
+            new Config()
+        ));
         fclose($temp);
     }
 
@@ -64,7 +73,11 @@ class AdapterTest extends TestCase
      */
     public function testUpdate(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertTrue((bool) $adapter->update("foo/{$options['machineId']}/bar.md", uniqid(), new Config()));
+        $this->assertTrue((bool) $adapter->update(
+            "foo/{$options['machineId']}/bar.md",
+            uniqid(),
+            new Config()
+        ));
     }
 
     /**
@@ -74,7 +87,11 @@ class AdapterTest extends TestCase
     {
         $temp = tmpfile();
         fwrite($temp, 'writing to tempfile');
-        $this->assertTrue((bool) $adapter->updateStream("foo/{$options['machineId']}/bar.md", $temp, new Config()));
+        $this->assertTrue((bool) $adapter->updateStream(
+            "foo/{$options['machineId']}/bar.md",
+            $temp,
+            new Config()
+        ));
         fclose($temp);
     }
 
