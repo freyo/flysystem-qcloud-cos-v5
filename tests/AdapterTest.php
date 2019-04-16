@@ -2,6 +2,7 @@
 
 namespace Freyo\Flysystem\QcloudCOSv5\Tests;
 
+use Carbon\Carbon;
 use Freyo\Flysystem\QcloudCOSv5\Adapter;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
@@ -100,7 +101,10 @@ class AdapterTest extends TestCase
      */
     public function testRename(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertTrue($adapter->rename("foo/{$options['machineId']}/foo.md", "/foo/{$options['machineId']}/rename.md"));
+        $this->assertTrue($adapter->rename(
+            "foo/{$options['machineId']}/foo.md",
+            "/foo/{$options['machineId']}/rename.md"
+        ));
     }
 
     /**
@@ -108,7 +112,10 @@ class AdapterTest extends TestCase
      */
     public function testCopy(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertTrue($adapter->copy("foo/{$options['machineId']}/bar.md", "/foo/{$options['machineId']}/copy.md"));
+        $this->assertTrue($adapter->copy(
+            "foo/{$options['machineId']}/bar.md",
+            "/foo/{$options['machineId']}/copy.md"
+        ));
     }
 
     /**
@@ -124,7 +131,9 @@ class AdapterTest extends TestCase
      */
     public function testCreateDir(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertTrue((bool) $adapter->createDir("bar/{$options['machineId']}", new Config()));
+        $this->assertTrue((bool) $adapter->createDir(
+            "bar/{$options['machineId']}", new Config()
+        ));
     }
 
     /**
@@ -140,7 +149,9 @@ class AdapterTest extends TestCase
      */
     public function testSetVisibility(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertTrue($adapter->setVisibility("foo/{$options['machineId']}/copy.md", 'private'));
+        $this->assertTrue($adapter->setVisibility(
+            "foo/{$options['machineId']}/copy.md", 'private'
+        ));
     }
 
     /**
@@ -156,9 +167,15 @@ class AdapterTest extends TestCase
      */
     public function testRead(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertArrayHasKey('contents', $adapter->read("foo/{$options['machineId']}/bar.md"));
+        $this->assertArrayHasKey(
+            'contents',
+            $adapter->read("foo/{$options['machineId']}/bar.md")
+        );
+
         $this->assertSame(
-            file_get_contents($adapter->getUrl("foo/{$options['machineId']}/bar.md")),
+            file_get_contents($adapter->getTemporaryUrl(
+                "foo/{$options['machineId']}/bar.md", Carbon::now()->addMinutes(5)
+            )),
             $adapter->read("foo/{$options['machineId']}/bar.md")['contents']
         );
     }
@@ -179,10 +196,18 @@ class AdapterTest extends TestCase
      */
     public function testReadStream(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertArrayHasKey('stream', $adapter->readStream("foo/{$options['machineId']}/bar.md"));
+        $this->assertArrayHasKey(
+            'stream',
+            $adapter->readStream("foo/{$options['machineId']}/bar.md")
+        );
+
         $this->assertSame(
-            stream_get_contents(fopen($adapter->getUrl("foo/{$options['machineId']}/bar.md"), 'rb', false)),
-            stream_get_contents($adapter->readStream("foo/{$options['machineId']}/bar.md")['stream'])
+            stream_get_contents(fopen($adapter->getTemporaryUrl(
+                "foo/{$options['machineId']}/bar.md", Carbon::now()->addMinutes(5)
+            ), 'rb', false)),
+            stream_get_contents($adapter->readStream(
+                "foo/{$options['machineId']}/bar.md")['stream']
+            )
         );
     }
 
@@ -191,7 +216,10 @@ class AdapterTest extends TestCase
      */
     public function testListContents(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertArrayHasKey(0, $adapter->listContents("foo/{$options['machineId']}"));
+        $this->assertArrayHasKey(
+            0,
+            $adapter->listContents("foo/{$options['machineId']}")
+        );
     }
 
     /**
@@ -199,7 +227,10 @@ class AdapterTest extends TestCase
      */
     public function testGetMetadata(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertArrayHasKey('ContentLength', $adapter->getMetadata("foo/{$options['machineId']}/bar.md"));
+        $this->assertArrayHasKey(
+            'ContentLength',
+            $adapter->getMetadata("foo/{$options['machineId']}/bar.md")
+        );
     }
 
     /**
@@ -207,7 +238,10 @@ class AdapterTest extends TestCase
      */
     public function testGetSize(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertArrayHasKey('size', $adapter->getSize("foo/{$options['machineId']}/bar.md"));
+        $this->assertArrayHasKey(
+            'size',
+            $adapter->getSize("foo/{$options['machineId']}/bar.md")
+        );
     }
 
     /**
@@ -215,7 +249,10 @@ class AdapterTest extends TestCase
      */
     public function testGetMimetype(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertNotSame(['mimetype' => ''], $adapter->getMimetype("foo/{$options['machineId']}/bar.md"));
+        $this->assertNotSame(
+            ['mimetype' => ''],
+            $adapter->getMimetype("foo/{$options['machineId']}/bar.md")
+        );
     }
 
     /**
@@ -223,7 +260,10 @@ class AdapterTest extends TestCase
      */
     public function testGetTimestamp(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertNotSame(['timestamp' => 0], $adapter->getTimestamp("foo/{$options['machineId']}/bar.md"));
+        $this->assertNotSame(
+            ['timestamp' => 0],
+            $adapter->getTimestamp("foo/{$options['machineId']}/bar.md")
+        );
     }
 
     /**
@@ -231,6 +271,9 @@ class AdapterTest extends TestCase
      */
     public function testGetVisibility(AdapterInterface $adapter, $config, $options)
     {
-        $this->assertSame(['visibility' => 'private'], $adapter->getVisibility("foo/{$options['machineId']}/copy.md"));
+        $this->assertSame(
+            ['visibility' => 'private'],
+            $adapter->getVisibility("foo/{$options['machineId']}/copy.md")
+        );
     }
 }
