@@ -27,7 +27,12 @@
   <p align="center">Secure, stable, massive, convenient, low-delay, low-cost cloud storage services</p>
 </div>
 
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5?ref=badge_large)
+
 ## Installation
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5?ref=badge_shield)
+
 
   ```shell
   composer require freyo/flysystem-qcloud-cos-v5
