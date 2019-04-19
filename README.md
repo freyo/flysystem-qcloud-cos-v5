@@ -1,6 +1,6 @@
 <div>
   <p align="center">
-    <image src="https://mc.qcloudimg.com/static/img/e9ea555bef030eb7b380e9a3a1e59323/COS.svg" width="220" height="220">
+    <image src="https://imgcache.qq.com/open_proj/proj_qcloud_v2/international/doc/css/img/icon/icon-storage.svg" width="150" height="150">
   </p>
   <p align="center">
     <a href="LICENSE">
@@ -27,9 +27,7 @@
       <img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5.svg?type=small"  alt="FOSSA Status">
     </a>
   </p>
-  <p align="center">Flysystem Adapter for <a href="https://github.com/tencentyun/cos-php-sdk-v5">cos-php-sdk-v5</a>.</p>
-  <p align="center">Tencent Cloud / Cloud Object Storage</p>
-  <p align="center">Secure, Stable, Massive, Convenient, Low-Delay, Low-Cost</p>
+  <p align="center">Flysystem Adapter for <a href="https://github.com/tencentyun/cos-php-sdk-v5">Tencent Cloud Object Storage</a></p>
 </div>
 
 ## Installation
