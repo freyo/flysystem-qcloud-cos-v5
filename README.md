@@ -23,13 +23,13 @@
     </a>
   </p>
   <p align="center">
-    <a href="https://app.fossa.io/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5?ref=badge_shield5">
-      <image src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5.svg" alt="fossa">
+    <a href="https://app.fossa.io/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5?ref=badge_small">
+      <img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5.svg?type=small"  alt="FOSSA Status">
     </a>
   </p>
-  <p align="center">This is a flysystem adapter for the <a href="https://github.com/tencentyun/cos-php-sdk-v5">cos-php-sdk-v5</a>.</p>
+  <p align="center">Flysystem Adapter for <a href="https://github.com/tencentyun/cos-php-sdk-v5">cos-php-sdk-v5</a>.</p>
   <p align="center">Tencent Cloud / Cloud Object Storage</p>
-  <p align="center">Secure, stable, massive, convenient, low-delay, low-cost cloud storage services</p>
+  <p align="center">Secure, Stable, Massive, Convenient, Low-Delay, Low-Cost</p>
 </div>
 
 ## Installation
