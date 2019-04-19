@@ -22,17 +22,17 @@
       <image src="https://img.shields.io/packagist/dt/freyo/flysystem-qcloud-cos-v5.svg?style=flat-square" alt="Total Downloads">
     </a>
   </p>
+  <p align="center">
+    <a href="https://app.fossa.io/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5?ref=badge_shield5">
+      <image src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5.svg" alt="fossa">
+    </a>
+  </p>
   <p align="center">This is a flysystem adapter for the <a href="https://github.com/tencentyun/cos-php-sdk-v5">cos-php-sdk-v5</a>.</p>
   <p align="center">Tencent Cloud / Cloud Object Storage</p>
   <p align="center">Secure, stable, massive, convenient, low-delay, low-cost cloud storage services</p>
 </div>
 
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5?ref=badge_large)
-
 ## Installation
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5?ref=badge_shield)
-
 
   ```shell
   composer require freyo/flysystem-qcloud-cos-v5
@@ -259,3 +259,7 @@ $disk->getFederationToken($path = '*', $seconds = 7200, Closure $customPolicy = 
 ## Regions & Endpoints
 
 [Official Documentation](https://intl.cloud.tencent.com/document/product/436/6224)
+
+## License
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5?ref=badge_large)
