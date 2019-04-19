@@ -260,4 +260,6 @@ $disk->getFederationToken($path = '*', $seconds = 7200, Closure $customPolicy = 
 
 ## License
 
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
+
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffreyo%2Fflysystem-qcloud-cos-v5?ref=badge_large)
