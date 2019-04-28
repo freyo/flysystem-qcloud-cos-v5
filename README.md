@@ -60,6 +60,7 @@
       'scheme'          => 'https',
       'read_from_cdn'   => false,
       'cdn_key'         => '',
+      'encrypt'         => false,
   ];
   
   $client     = new Client($config);
@@ -111,7 +112,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'
 
 ## Use in Laravel
   
-**Laravel 5.5 uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.**
+**Laravel 5.5+ uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.**
 
 1. Register the service provider in `config/app.php`:
 
