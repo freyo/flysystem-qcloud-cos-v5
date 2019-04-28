@@ -142,6 +142,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'
             'scheme'          => env('COSV5_SCHEME', 'https'),
             'read_from_cdn'   => env('COSV5_READ_FROM_CDN', false),
             'cdn_key'         => env('COSV5_CDN_KEY'),
+            'encrypt'         => env('COSV5_ENCRYPT', false),
       ],
   ],
   ```
@@ -160,6 +161,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'
   COSV5_SCHEME=https
   COSV5_READ_FROM_CDN=false
   COSV5_CDN_KEY=
+  COSV5_ENCRYPT=false
   ```
 
 ## Use in Lumen
@@ -197,6 +199,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'
   COSV5_SCHEME=https
   COSV5_READ_FROM_CDN=false
   COSV5_CDN_KEY=
+  COSV5_ENCRYPT=false
   ```
 
 ### Usage
@@ -252,7 +255,7 @@ $disk->tcaptcha($aid, $appSecretKey)->verify($ticket, $randStr, $userIP);
 $disk->getFederationToken($path = '*', $seconds = 7200, Closure $customPolicy = null, $name = 'cos')
 ```
 
-[Full API documentation.](https://laravel.com/api/5.7/Illuminate/Contracts/Filesystem/Cloud.html)
+[Full API documentation.](https://laravel.com/api/5.8/Illuminate/Contracts/Filesystem/Cloud.html)
 
 ## Regions & Endpoints
 
