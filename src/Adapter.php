@@ -569,4 +569,12 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
 
         return $visibility;
     }
+
+    /**
+     * @return Client
+     */
+    public function getCOSClient()
+    {
+        return $this->client;
+    }
 }
