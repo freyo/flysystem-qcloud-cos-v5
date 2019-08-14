@@ -409,10 +409,18 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     {
         $list = [];
 
-        $response = $this->listObjects($directory, $recursive);
+        $marker = '';
+        while (true) {
+            $response = $this->listObjects($directory, $recursive, $marker);
 
-        foreach ((array) $response->get('Contents') as $content) {
-            $list[] = $this->normalizeFileInfo($content);
+            foreach ((array) $response->get('Contents') as $content) {
+                $list[] = $this->normalizeFileInfo($content);
+            }
+
+            if (!$response->get('IsTruncated')) {
+                break;
+            }
+            $marker = $response->get('NextMarker') ?: '';
         }
 
         return $list;
@@ -518,15 +526,19 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * @param string $directory
      * @param bool   $recursive
+     * @param string $marker max return 1000 record, if record greater than 1000
+     * you should set the next marker to get the full list
      *
      * @return mixed
      */
-    private function listObjects($directory = '', $recursive = false)
+    private function listObjects($directory = '', $recursive = false, $marker = '')
     {
         return $this->client->listObjects([
             'Bucket'    => $this->getBucket(),
             'Prefix'    => ((string) $directory === '') ? '' : ($directory.'/'),
             'Delimiter' => $recursive ? '' : '/',
+            'Marker'    => $marker,
+            'MaxKeys'   => 1000,
         ]);
     }
 
