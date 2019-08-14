@@ -526,8 +526,8 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * @param string $directory
      * @param bool   $recursive
-     * @param string $marker max return 1000 record, if record greater than 1000
-     * you should set the next marker to get the full list
+     * @param string $marker    max return 1000 record, if record greater than 1000
+     *                          you should set the next marker to get the full list
      *
      * @return mixed
      */
