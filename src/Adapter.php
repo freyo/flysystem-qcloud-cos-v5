@@ -108,6 +108,18 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     }
 
     /**
+     * @param $path
+     *
+     * @return string
+     */
+    public function getPicturePath($path)
+    {
+        return sprintf('%s.pic.%s.myqcloud.com/%s',
+            $this->getBucketWithAppId(), $this->getRegion(), $path
+        );
+    }
+
+    /**
      * @param string $path
      *
      * @return string
@@ -588,5 +600,23 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     public function getCOSClient()
     {
         return $this->client;
+    }
+
+    /**
+     * @param $method
+     * @param $url
+     *
+     * @return string
+     */
+    public function getAuthorization($method, $url)
+    {
+        $cosRequest = new \Guzzle\Http\Message\Request($method, $url);
+
+        $signature = new \Qcloud\Cos\Signature(
+            $this->config['credentials']['secretId'],
+            $this->config['credentials']['secretKey']
+        );
+
+        return $signature->createAuthorization($cosRequest);
     }
 }
