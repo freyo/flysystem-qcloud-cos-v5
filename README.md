@@ -254,6 +254,10 @@ $disk->tcaptcha($aid, $appSecretKey)->verify($ticket, $randStr, $userIP);
 
 // get federation token(plugin support)
 $disk->getFederationToken($path = '*', $seconds = 7200, Closure $customPolicy = null, $name = 'cos')
+
+// tencent image process(plugin support)
+$disk->cloudInfinite()->imageProcess($objectKey, array $picOperations);
+$disk->cloudInfinite()->contentRecognition($objectKey, array $contentRecognition);
 ```
 
 [Full API documentation.](https://laravel.com/api/5.8/Illuminate/Contracts/Filesystem/Cloud.html)
