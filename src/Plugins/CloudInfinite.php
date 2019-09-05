@@ -19,12 +19,20 @@ class CloudInfinite extends AbstractPlugin
     }
 
     /**
+     * @return $this
+     */
+    public function handle()
+    {
+        return $this;
+    }
+
+    /**
      * @param string $objectKey
      * @param array $picOperations
      *
-     * @return mixed
+     * @return array
      */
-    public function handle($objectKey, array $picOperations)
+    public function imageProcess($objectKey, array $picOperations)
     {
         $adapter = $this->filesystem->getAdapter();
 
@@ -36,6 +44,33 @@ class CloudInfinite extends AbstractPlugin
                 'Authorization' => $adapter->getAuthorization('POST', $url),
                 'Pic-Operations' => \GuzzleHttp\json_encode(
                     $picOperations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                ),
+            ],
+        ]);
+
+        return $this->parse(
+            $response->getBody()->getContents()
+        );
+    }
+
+    /**
+     * @param string $objectKey
+     * @param array $contentRecognition
+     *
+     * @return array
+     */
+    public function contentRecognition($objectKey, array $contentRecognition)
+    {
+        $adapter = $this->filesystem->getAdapter();
+
+        $url = 'https://' . $adapter->getPicturePath($objectKey) . '?CR';
+
+        $response = $adapter->getHttpClient()->get($url, [
+            'http_errors' => false,
+            'headers' => [
+                'Authorization' => $adapter->getAuthorization('GET', $url),
+                'Content-Recognition' => \GuzzleHttp\json_encode(
+                    $contentRecognition, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                 ),
             ],
         ]);
