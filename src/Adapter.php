@@ -9,7 +9,7 @@ use League\Flysystem\Adapter\CanOverwriteFiles;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
 use Qcloud\Cos\Client;
-use Qcloud\Cos\Exception\NoSuchKeyException;
+use Qcloud\Cos\Exception\ServiceResponseException;
 
 /**
  * Class Adapter.
@@ -316,7 +316,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     {
         try {
             return (bool) $this->getMetadata($path);
-        } catch (NoSuchKeyException $e) {
+        } catch (ServiceResponseException $e) {
             return false;
         }
     }
@@ -334,9 +334,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
                 : $this->readFromSource($path);
 
             return ['contents' => (string) $response];
-        } catch (NoSuchKeyException $e) {
-            return false;
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (ServiceResponseException $e) {
             return false;
         }
     }
@@ -371,10 +369,12 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     protected function readFromSource($path)
     {
-        return $this->client->getObject([
+        $response = $this->client->getObject([
             'Bucket' => $this->getBucket(),
             'Key'    => $path,
-        ])->get('Body');
+        ]);
+
+        return $response['Body'];
     }
 
     /**
@@ -404,9 +404,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
                            ->detach();
 
             return ['stream' => $stream];
-        } catch (NoSuchKeyException $e) {
-            return false;
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (ServiceResponseException $e) {
             return false;
         }
     }
@@ -425,14 +423,14 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         while (true) {
             $response = $this->listObjects($directory, $recursive, $marker);
 
-            foreach ((array) $response->get('Contents') as $content) {
+            foreach ((array) $response['Contents'] as $content) {
                 $list[] = $this->normalizeFileInfo($content);
             }
 
-            if (!$response->get('IsTruncated')) {
+            if (!$response['IsTruncated']) {
                 break;
             }
-            $marker = $response->get('NextMarker') ?: '';
+            $marker = $response['NextMarker'] ?: '';
         }
 
         return $list;
@@ -502,7 +500,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             'Key'    => $path,
         ]);
 
-        foreach ($meta->get('Grants') as $grant) {
+        foreach ($meta['Grants'] as $grant) {
             if (isset($grant['Grantee']['URI'])
                 && $grant['Permission'] === 'READ'
                 && strpos($grant['Grantee']['URI'], 'global/AllUsers') !== false
@@ -528,7 +526,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             'path'      => $content['Key'],
             'timestamp' => Carbon::parse($content['LastModified'])->getTimestamp(),
             'size'      => (int) $content['Size'],
-            'dirname'   => (string) $path['dirname'],
+            'dirname'   => $path['dirname'] === '.' ? '' : (string) $path['dirname'],
             'basename'  => (string) $path['basename'],
             'extension' => isset($path['extension']) ? $path['extension'] : '',
             'filename'  => (string) $path['filename'],
@@ -541,7 +539,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      * @param string $marker    max return 1000 record, if record greater than 1000
      *                          you should set the next marker to get the full list
      *
-     * @return mixed
+     * @return \GuzzleHttp\Command\Result
      */
     private function listObjects($directory = '', $recursive = false, $marker = '')
     {
@@ -610,7 +608,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getAuthorization($method, $url)
     {
-        $cosRequest = new \Guzzle\Http\Message\Request($method, $url);
+        $cosRequest = new \GuzzleHttp\Psr7\Request($method, $url);
 
         $signature = new \Qcloud\Cos\Signature(
             $this->config['credentials']['secretId'],
