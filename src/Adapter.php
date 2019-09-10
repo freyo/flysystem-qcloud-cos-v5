@@ -443,10 +443,14 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getMetadata($path)
     {
-        return $this->client->headObject([
-            'Bucket' => $this->getBucket(),
-            'Key'    => $path,
-        ])->toArray();
+        try {
+            return $this->client->headObject([
+                'Bucket' => $this->getBucket(),
+                'Key'    => $path,
+            ])->toArray();
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -495,21 +499,25 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getVisibility($path)
     {
-        $meta = $this->client->getObjectAcl([
-            'Bucket' => $this->getBucket(),
-            'Key'    => $path,
-        ]);
+        try {
+            $meta = $this->client->getObjectAcl([
+                'Bucket' => $this->getBucket(),
+                'Key'    => $path,
+            ]);
 
-        foreach ($meta['Grants'] as $grant) {
-            if (isset($grant['Grantee']['URI'])
-                && $grant['Permission'] === 'READ'
-                && strpos($grant['Grantee']['URI'], 'global/AllUsers') !== false
-            ) {
-                return ['visibility' => AdapterInterface::VISIBILITY_PUBLIC];
+            foreach ($meta['Grants'] as $grant) {
+                if (isset($grant['Grantee']['URI'])
+                    && $grant['Permission'] === 'READ'
+                    && strpos($grant['Grantee']['URI'], 'global/AllUsers') !== false
+                ) {
+                    return ['visibility' => AdapterInterface::VISIBILITY_PUBLIC];
+                }
             }
-        }
 
-        return ['visibility' => AdapterInterface::VISIBILITY_PRIVATE];
+            return ['visibility' => AdapterInterface::VISIBILITY_PRIVATE];
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
