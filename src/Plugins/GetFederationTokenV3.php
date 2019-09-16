@@ -23,10 +23,10 @@ class GetFederationTokenV3 extends AbstractPlugin
     /**
      * @see https://cloud.tencent.com/document/product/598/33416
      *
-     * @param string $path
-     * @param int $seconds
+     * @param string  $path
+     * @param int     $seconds
      * @param Closure $customPolicy
-     * @param string $name
+     * @param string  $name
      *
      * @return bool|array
      */
@@ -38,8 +38,8 @@ class GetFederationTokenV3 extends AbstractPlugin
 
         $params = [
             'DurationSeconds' => $seconds,
-            'Name' => $name,
-            'Policy' => urlencode($policy),
+            'Name'            => $name,
+            'Policy'          => urlencode($policy),
         ];
 
         return $this->request($params, 'GetFederationToken');
@@ -75,7 +75,7 @@ class GetFederationTokenV3 extends AbstractPlugin
         $bucket = $this->getConfig()->get('bucket');
 
         $policy = [
-            'version' => '2.0',
+            'version'   => '2.0',
             'statement' => [
                 'action' => [
                     // 简单上传
@@ -88,7 +88,7 @@ class GetFederationTokenV3 extends AbstractPlugin
                     'name/cos:CompleteMultipartUpload',
                     'name/cos:AbortMultipartUpload',
                 ],
-                'effect' => 'allow',
+                'effect'   => 'allow',
                 'resource' => [
                     "qcs::cos:$region:uid/$appId:prefix//$appId/$bucket/$path",
                 ],
@@ -129,11 +129,11 @@ class GetFederationTokenV3 extends AbstractPlugin
 
         $response = $client->post('/', [
             'headers' => [
-                'X-TC-Action' => $action,
-                'X-TC-Region' => $this->getConfig()->get('region'),
+                'X-TC-Action'    => $action,
+                'X-TC-Region'    => $this->getConfig()->get('region'),
                 'X-TC-Timestamp' => $timestamp = $timestamp ?: time(),
-                'X-TC-Version' => '2018-08-13',
-                'Authorization' => $this->getAuthorization($args, $timestamp),
+                'X-TC-Version'   => '2018-08-13',
+                'Authorization'  => $this->getAuthorization($args, $timestamp),
             ],
             'json' => $args,
         ]);
@@ -181,7 +181,7 @@ class GetFederationTokenV3 extends AbstractPlugin
             '%s Credential=%s/%s, SignedHeaders=%s, Signature=%s',
             'TC3-HMAC-SHA256',
             $this->getCredentials()['secretId'],
-            date('Y-m-d', $timestamp) . '/sts/tc3_request',
+            date('Y-m-d', $timestamp).'/sts/tc3_request',
             'content-type;host',
             hash_hmac(
                 'SHA256',
@@ -201,7 +201,7 @@ class GetFederationTokenV3 extends AbstractPlugin
         return hash_hmac('SHA256', 'tc3_request',
             hash_hmac('SHA256', 'sts',
                 hash_hmac('SHA256', date('Y-m-d', $timestamp),
-                    'TC3' . $this->getCredentials()['secretKey'], true
+                    'TC3'.$this->getCredentials()['secretKey'], true
                 ), true
             ), true
         );
@@ -222,9 +222,9 @@ class GetFederationTokenV3 extends AbstractPlugin
             'host:sts.tencentcloudapi.com',
             '',
             'content-type;host',
-            hash("SHA256", \GuzzleHttp\json_encode(
+            hash('SHA256', \GuzzleHttp\json_encode(
                 $args, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-            ))
+            )),
         ]);
     }
 
@@ -239,7 +239,7 @@ class GetFederationTokenV3 extends AbstractPlugin
         return implode("\n", [
             'TC3-HMAC-SHA256',
             $timestamp,
-            date('Y-m-d', $timestamp) . '/sts/tc3_request',
+            date('Y-m-d', $timestamp).'/sts/tc3_request',
             hash('SHA256', $this->getCanonicalRequest($args)),
         ]);
     }

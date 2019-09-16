@@ -36,14 +36,14 @@ class ServiceProvider extends LaravelServiceProvider
                       $client = new Client($config);
                       $flysystem = new Filesystem(new Adapter($client, $config), $config);
 
-                      $flysystem->addPlugin(new PutRemoteFile);
-                      $flysystem->addPlugin(new PutRemoteFileAs);
-                      $flysystem->addPlugin(new GetUrl);
-                      $flysystem->addPlugin(new CDN);
-                      $flysystem->addPlugin(new TCaptcha);
-                      $flysystem->addPlugin(new GetFederationToken);
-                      $flysystem->addPlugin(new GetFederationTokenV3);
-                      $flysystem->addPlugin(new CloudInfinite);
+                      $flysystem->addPlugin(new PutRemoteFile());
+                      $flysystem->addPlugin(new PutRemoteFileAs());
+                      $flysystem->addPlugin(new GetUrl());
+                      $flysystem->addPlugin(new CDN());
+                      $flysystem->addPlugin(new TCaptcha());
+                      $flysystem->addPlugin(new GetFederationToken());
+                      $flysystem->addPlugin(new GetFederationTokenV3());
+                      $flysystem->addPlugin(new CloudInfinite());
 
                       return $flysystem;
                   });
