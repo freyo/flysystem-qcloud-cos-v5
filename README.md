@@ -230,11 +230,11 @@ $contents = $disk->read('folder/my_file.txt');
 $url = $disk->url('new/file1.jpg');
 $temporaryUrl = $disk->temporaryUrl('new/file1.jpg', Carbon::now()->addMinutes(5));
 
-// create a file from remote(plugin support)
+// create a file from remote(plugin)
 $disk->putRemoteFile('avatars/1', 'http://example.org/avatar.jpg');
 $disk->putRemoteFileAs('avatars/1', 'http://example.org/avatar.jpg', 'file1.jpg');
 
-// refresh cdn cache(plugin support)
+// refresh cdn cache(plugin)
 $disk->cdn()->refreshUrl(['http://your-cdn-host/path/to/avatar.jpg']);
 $disk->cdn()->refreshDir(['http://your-cdn-host/path/to/']);
 $disk->cdn()->pushUrl(['http://your-cdn-host/path/to/avatar.jpg']);
@@ -242,20 +242,21 @@ $disk->cdn()->refreshOverseaUrl(['http://your-cdn-host/path/to/avatar.jpg']);
 $disk->cdn()->refreshOverseaDir(['http://your-cdn-host/path/to/']);
 $disk->cdn()->pushOverseaUrl(['http://your-cdn-host/path/to/avatar.jpg']);
 
-// cdn url signature(plugin support)
+// cdn url signature(plugin)
 $url = 'http://www.test.com/1.mp4';
 $disk->cdn()->signatureA($url, $key = null, $timestamp = null, $random = null, $signName = 'sign');
 $disk->cdn()->signatureB($url, $key = null, $timestamp = null);
 $disk->cdn()->signatureC($url, $key = null, $timestamp = null);
 $disk->cdn()->signatureD($url, $key = null, $timestamp = null, $signName = 'sign', $timeName = 't');
 
-// tencent captcha(plugin support)
+// tencent captcha(plugin)
 $disk->tcaptcha($aid, $appSecretKey)->verify($ticket, $randStr, $userIP);
 
-// get federation token(plugin support)
+// get federation token(plugin)
 $disk->getFederationToken($path = '*', $seconds = 7200, Closure $customPolicy = null, $name = 'cos')
+$disk->getFederationTokenV3($path = '*', $seconds = 7200, Closure $customPolicy = null, $name = 'cos')
 
-// tencent image process(plugin support)
+// tencent image process(plugin)
 $disk->cloudInfinite()->imageProcess($objectKey, array $picOperations);
 $disk->cloudInfinite()->contentRecognition($objectKey, array $contentRecognition);
 ```
