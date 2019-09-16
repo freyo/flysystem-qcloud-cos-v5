@@ -2,7 +2,6 @@
 
 namespace Freyo\Flysystem\QcloudCOSv5\Plugins;
 
-use Closure;
 use League\Flysystem\Plugin\AbstractPlugin;
 use SimpleXMLElement;
 
@@ -28,7 +27,7 @@ class CloudInfinite extends AbstractPlugin
 
     /**
      * @param string $objectKey
-     * @param array $picOperations
+     * @param array  $picOperations
      *
      * @return array
      */
@@ -36,12 +35,12 @@ class CloudInfinite extends AbstractPlugin
     {
         $adapter = $this->filesystem->getAdapter();
 
-        $url = 'https://' . $adapter->getPicturePath($objectKey) . '?image_process';
+        $url = 'https://'.$adapter->getPicturePath($objectKey).'?image_process';
 
         $response = $adapter->getHttpClient()->post($url, [
             'http_errors' => false,
-            'headers' => [
-                'Authorization' => $adapter->getAuthorization('POST', $url),
+            'headers'     => [
+                'Authorization'  => $adapter->getAuthorization('POST', $url),
                 'Pic-Operations' => \GuzzleHttp\json_encode(
                     $picOperations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                 ),
@@ -55,7 +54,7 @@ class CloudInfinite extends AbstractPlugin
 
     /**
      * @param string $objectKey
-     * @param array $contentRecognition
+     * @param array  $contentRecognition
      *
      * @return array
      */
@@ -63,12 +62,12 @@ class CloudInfinite extends AbstractPlugin
     {
         $adapter = $this->filesystem->getAdapter();
 
-        $url = 'https://' . $adapter->getPicturePath($objectKey) . '?CR';
+        $url = 'https://'.$adapter->getPicturePath($objectKey).'?CR';
 
         $response = $adapter->getHttpClient()->get($url, [
             'http_errors' => false,
-            'headers' => [
-                'Authorization' => $adapter->getAuthorization('GET', $url),
+            'headers'     => [
+                'Authorization'       => $adapter->getAuthorization('GET', $url),
                 'Content-Recognition' => \GuzzleHttp\json_encode(
                     $contentRecognition, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                 ),
@@ -115,7 +114,7 @@ class CloudInfinite extends AbstractPlugin
         $result = null;
 
         if (is_object($obj)) {
-            $obj = (array)$obj;
+            $obj = (array) $obj;
         }
 
         if (is_array($obj)) {
