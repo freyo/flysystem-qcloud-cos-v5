@@ -28,7 +28,7 @@ class FaceId extends AbstractPlugin
     }
 
     /**
-     * @param $ruleId
+     * @param string $ruleId
      * @param array $options
      *
      * @return array|bool
@@ -36,27 +36,31 @@ class FaceId extends AbstractPlugin
     public function detectAuth($ruleId, array $options = [])
     {
         $params = array_merge($options, [
-            'RuleId' => $ruleId,
+            'RuleId' => (string)$ruleId,
         ]);
 
-        return $this->request($params, 'DetectAuth', 'faceid');
+        return $this->request(
+            $params, 'DetectAuth', 'faceid', '2018-03-01'
+        );
     }
 
     /**
-     * @param $ruleId
-     * @param $bizToken
-     * @param int $infoType
+     * @param string $ruleId
+     * @param string $bizToken
+     * @param string $infoType
      *
      * @return array|bool
      */
-    public function getDetectInfo($ruleId, $bizToken, $infoType = 0)
+    public function getDetectInfo($ruleId, $bizToken, $infoType = '0')
     {
         $params = [
-            'RuleId' => $ruleId,
+            'RuleId' => (string)$ruleId,
             'BizToken' => $bizToken,
-            'InfoType' => $infoType,
+            'InfoType' => (string)$infoType,
         ];
 
-        return $this->request($params, 'GetDetectInfo', 'faceid');
+        return $this->request(
+            $params, 'GetDetectInfo', 'faceid', '2018-03-01'
+        );
     }
 }

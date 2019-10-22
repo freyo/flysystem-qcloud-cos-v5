@@ -45,7 +45,7 @@ class GetFederationTokenV3 extends AbstractPlugin
             'Policy' => urlencode($policy),
         ];
 
-        return $this->request($params, 'GetFederationToken', 'sts');
+        return $this->request($params, 'GetFederationToken', 'sts', '2018-08-13');
     }
 
     /**

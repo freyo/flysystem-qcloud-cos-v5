@@ -24,11 +24,12 @@ trait TencentCloudAuthV3
      * @param array $args
      * @param string $action
      * @param string $service
+     * @param string $version
      * @param null $timestamp
      *
      * @return bool|array
      */
-    protected function request(array $args, $action, $service, $timestamp = null)
+    protected function request(array $args, $action, $service, $version, $timestamp = null)
     {
         $client = $this->getHttpClient($service);
 
@@ -37,7 +38,7 @@ trait TencentCloudAuthV3
                 'X-TC-Action' => $action,
                 'X-TC-Region' => $this->getConfig()->get('region'),
                 'X-TC-Timestamp' => $timestamp = $timestamp ?: time(),
-                'X-TC-Version' => '2018-03-01',
+                'X-TC-Version' => $version,
                 'Authorization' => $this->getAuthorization($args, $timestamp, $service),
             ],
             'json' => $args,
