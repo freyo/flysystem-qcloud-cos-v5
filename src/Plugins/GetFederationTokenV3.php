@@ -37,7 +37,7 @@ class GetFederationTokenV3 extends AbstractPlugin
     {
         $policy = !is_null($customPolicy)
             ? $this->getCustomPolicy($customPolicy, $path)
-            : $this->getPolicy($path);
+            : $this->getDefaultPolicy($path);
 
         $params = [
             'DurationSeconds' => $seconds,
@@ -45,7 +45,9 @@ class GetFederationTokenV3 extends AbstractPlugin
             'Policy' => urlencode($policy),
         ];
 
-        return $this->request($params, 'GetFederationToken', 'sts', '2018-08-13');
+        return $this->request(
+            $params, 'GetFederationToken', 'sts', '2018-08-13'
+        );
     }
 
     /**
@@ -70,7 +72,7 @@ class GetFederationTokenV3 extends AbstractPlugin
      *
      * @return string
      */
-    protected function getPolicy($path)
+    protected function getDefaultPolicy($path)
     {
         $appId = $this->getCredentials()['appId'];
 

@@ -25,7 +25,7 @@ trait TencentCloudAuthV3
      * @param string $action
      * @param string $service
      * @param string $version
-     * @param null $timestamp
+     * @param string|integer|null $timestamp
      *
      * @return bool|array
      */
