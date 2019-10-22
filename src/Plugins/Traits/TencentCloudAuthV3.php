@@ -40,8 +40,11 @@ trait TencentCloudAuthV3
                 'X-TC-Timestamp' => $timestamp = $timestamp ?: time(),
                 'X-TC-Version' => $version,
                 'Authorization' => $this->getAuthorization($args, $timestamp, $service),
+                'Content-Type' => 'application/json',
             ],
-            'json' => $args,
+            'body' => \GuzzleHttp\json_encode(
+                $args, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+            ),
         ]);
 
         $contents = $response->getBody()->getContents();
