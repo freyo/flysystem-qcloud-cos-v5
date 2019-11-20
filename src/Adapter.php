@@ -242,7 +242,11 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function copy($path, $newpath)
     {
-        $source = $this->getSourcePath($path);
+        $source = [
+            'Region' => $this->getRegion(),
+            'Bucket' => $this->getBucket(),
+            'Key' => $this->getSourcePath($path),
+        ];
 
         return (bool) $this->client->copy($this->getBucket(), $newpath, $source);
     }
