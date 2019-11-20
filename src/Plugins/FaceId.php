@@ -29,14 +29,14 @@ class FaceId extends AbstractPlugin
 
     /**
      * @param string $ruleId
-     * @param array $options
+     * @param array  $options
      *
      * @return array|bool
      */
     public function detectAuth($ruleId, array $options = [])
     {
         $params = array_merge($options, [
-            'RuleId' => (string)$ruleId,
+            'RuleId' => (string) $ruleId,
         ]);
 
         return $this->request(
@@ -54,9 +54,9 @@ class FaceId extends AbstractPlugin
     public function getDetectInfo($ruleId, $bizToken, $infoType = '0')
     {
         $params = [
-            'RuleId' => (string)$ruleId,
+            'RuleId'   => (string) $ruleId,
             'BizToken' => $bizToken,
-            'InfoType' => (string)$infoType,
+            'InfoType' => (string) $infoType,
         ];
 
         return $this->request(

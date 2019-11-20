@@ -240,6 +240,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             if ($result = $this->copy($path, $newpath)) {
                 $this->delete($path);
             }
+
             return $result;
         } catch (ServiceResponseException $e) {
             return false;
@@ -256,8 +257,8 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     {
         try {
             return (bool) $this->client->copyObject([
-                'Bucket' => $this->getBucketWithAppId(),
-                'Key' => $newpath,
+                'Bucket'     => $this->getBucketWithAppId(),
+                'Key'        => $newpath,
                 'CopySource' => $this->getSourcePath($path),
             ]);
         } catch (ServiceResponseException $e) {
@@ -404,6 +405,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
                 'Bucket' => $this->getBucketWithAppId(),
                 'Key'    => $path,
             ]);
+
             return $response['Body'];
         } catch (ServiceResponseException $e) {
             return false;
@@ -594,9 +596,9 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             ]);
         } catch (ServiceResponseException $e) {
             return [
-                'Contents' => [],
+                'Contents'    => [],
                 'IsTruncated' => false,
-                'NextMarker' => '',
+                'NextMarker'  => '',
             ];
         }
     }
