@@ -134,11 +134,12 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             'Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http',
         ];
 
+        /** @var \GuzzleHttp\Psr7\Uri $objectUrl */
         $objectUrl = $this->client->getObjectUrl(
             $this->getBucketWithAppId(), $path, null, $options
         );
 
-        return $objectUrl;
+        return (string) $objectUrl;
     }
 
     /**
@@ -155,11 +156,12 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             ['Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http']
         );
 
+        /** @var \GuzzleHttp\Psr7\Uri $objectUrl */
         $objectUrl = $this->client->getObjectUrl(
             $this->getBucketWithAppId(), $path, $expiration->format('c'), $options
         );
 
-        return $objectUrl;
+        return (string) $objectUrl;
     }
 
     /**

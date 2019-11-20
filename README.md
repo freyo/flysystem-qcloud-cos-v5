@@ -52,6 +52,7 @@
           'appId'     => 'your-app-id',
           'secretId'  => 'your-secret-id',
           'secretKey' => 'your-secret-key',
+          'token'     => null,
       ],
       'timeout'         => 60,
       'connect_timeout' => 60,
@@ -135,6 +136,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'
                 'appId'     => env('COSV5_APP_ID'),
                 'secretId'  => env('COSV5_SECRET_ID'),
                 'secretKey' => env('COSV5_SECRET_KEY'),
+                'token'     => env('COSV5_TOKEN'),
             ],
             'timeout'         => env('COSV5_TIMEOUT', 60),
             'connect_timeout' => env('COSV5_CONNECT_TIMEOUT', 60),
@@ -154,6 +156,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'
   COSV5_APP_ID=
   COSV5_SECRET_ID=
   COSV5_SECRET_KEY=
+  COSV5_TOKEN=null
   COSV5_TIMEOUT=60
   COSV5_CONNECT_TIMEOUT=60
   COSV5_BUCKET=
@@ -192,6 +195,7 @@ bool $flysystem->setVisibility('file.md', 'public'); //or 'private', 'default'
   COSV5_APP_ID=
   COSV5_SECRET_ID=
   COSV5_SECRET_KEY=
+  COSV5_TOKEN=null
   COSV5_TIMEOUT=60
   COSV5_CONNECT_TIMEOUT=60
   COSV5_BUCKET=
