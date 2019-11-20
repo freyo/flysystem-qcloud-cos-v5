@@ -103,7 +103,7 @@ class AdapterTest extends TestCase
     {
         $this->assertTrue($adapter->rename(
             "foo/{$options['machineId']}/foo.md",
-            "foo/{$options['machineId']}/rename.md"
+            "/foo/{$options['machineId']}/rename.md"
         ));
     }
 
@@ -114,7 +114,7 @@ class AdapterTest extends TestCase
     {
         $this->assertTrue($adapter->copy(
             "foo/{$options['machineId']}/bar.md",
-            "foo/{$options['machineId']}/copy.md"
+            "/foo/{$options['machineId']}/copy.md"
         ));
     }
 

@@ -171,9 +171,16 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function write($path, $contents, Config $config)
     {
-        $options = $this->prepareUploadConfig($config);
-
-        return $this->client->upload($this->getBucketWithAppId(), $path, $contents, $options);
+        try {
+            return $this->client->upload(
+                $this->getBucketWithAppId(),
+                $path,
+                $contents,
+                $this->prepareUploadConfig($config)
+            );
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -185,14 +192,16 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function writeStream($path, $resource, Config $config)
     {
-        $options = $this->prepareUploadConfig($config);
-
-        return $this->client->upload(
-            $this->getBucketWithAppId(),
-            $path,
-            stream_get_contents($resource, -1, 0),
-            $options
-        );
+        try {
+            return $this->client->upload(
+                $this->getBucketWithAppId(),
+                $path,
+                stream_get_contents($resource, -1, 0),
+                $this->prepareUploadConfig($config)
+            );
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -246,12 +255,11 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     public function copy($path, $newpath)
     {
         try {
-            $source = [
-                'Region' => $this->getRegion(),
+            return (bool) $this->client->copyObject([
                 'Bucket' => $this->getBucketWithAppId(),
-                'Key' => $this->getSourcePath($path),
-            ];
-            return (bool) $this->client->copy($this->getBucketWithAppId(), $newpath, $source);
+                'Key' => $newpath,
+                'CopySource' => $this->getSourcePath($path),
+            ]);
         } catch (ServiceResponseException $e) {
             return false;
         }
