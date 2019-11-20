@@ -227,11 +227,14 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function rename($path, $newpath)
     {
-        $result = $this->copy($path, $newpath);
-
-        $this->delete($path);
-
-        return $result;
+        try {
+            if ($result = $this->copy($path, $newpath)) {
+                $this->delete($path);
+            }
+            return $result;
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -242,13 +245,16 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function copy($path, $newpath)
     {
-        $source = [
-            'Region' => $this->getRegion(),
-            'Bucket' => $this->getBucketWithAppId(),
-            'Key' => $this->getSourcePath($path),
-        ];
-
-        return (bool) $this->client->copy($this->getBucketWithAppId(), $newpath, $source);
+        try {
+            $source = [
+                'Region' => $this->getRegion(),
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key' => $this->getSourcePath($path),
+            ];
+            return (bool) $this->client->copy($this->getBucketWithAppId(), $newpath, $source);
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -258,12 +264,14 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function delete($path)
     {
-        $result = $this->client->deleteObject([
-            'Bucket' => $this->getBucketWithAppId(),
-            'Key'    => $path,
-        ]);
-
-        return (bool) $result;
+        try {
+            return (bool) $this->client->deleteObject([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $path,
+            ]);
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -273,12 +281,14 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function deleteDir($dirname)
     {
-        $result = $this->client->deleteObject([
-            'Bucket' => $this->getBucketWithAppId(),
-            'Key'    => $dirname.'/',
-        ]);
-
-        return (bool) $result;
+        try {
+            return (bool) $this->client->deleteObject([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $dirname.'/',
+            ]);
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -289,11 +299,15 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function createDir($dirname, Config $config)
     {
-        return $this->client->putObject([
-            'Bucket' => $this->getBucketWithAppId(),
-            'Key'    => $dirname.'/',
-            'Body'   => '',
-        ]);
+        try {
+            return $this->client->putObject([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $dirname.'/',
+                'Body'   => '',
+            ]);
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -304,11 +318,15 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function setVisibility($path, $visibility)
     {
-        return (bool) $this->client->PutObjectAcl([
-            'Bucket' => $this->getBucketWithAppId(),
-            'Key'    => $path,
-            'ACL'    => $this->normalizeVisibility($visibility),
-        ]);
+        try {
+            return (bool) $this->client->putObjectAcl([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $path,
+                'ACL'    => $this->normalizeVisibility($visibility),
+            ]);
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -373,12 +391,15 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     protected function readFromSource($path)
     {
-        $response = $this->client->getObject([
-            'Bucket' => $this->getBucketWithAppId(),
-            'Key'    => $path,
-        ]);
-
-        return $response['Body'];
+        try {
+            $response = $this->client->getObject([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $path,
+            ]);
+            return $response['Body'];
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -551,7 +572,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      * @param string $marker    max return 1000 record, if record greater than 1000
      *                          you should set the next marker to get the full list
      *
-     * @return \GuzzleHttp\Command\Result
+     * @return \GuzzleHttp\Command\Result|array
      */
     private function listObjects($directory = '', $recursive = false, $marker = '')
     {
@@ -564,7 +585,11 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
                 'MaxKeys'   => 1000,
             ]);
         } catch (ServiceResponseException $e) {
-            return new \GuzzleHttp\Command\Result([]);
+            return [
+                'Contents' => [],
+                'IsTruncated' => false,
+                'NextMarker' => '',
+            ];
         }
     }
 
