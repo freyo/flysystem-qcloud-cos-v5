@@ -135,7 +135,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         ];
 
         $objectUrl = $this->client->getObjectUrl(
-            $this->getBucket(), $path, null, $options
+            $this->getBucketWithAppId(), $path, null, $options
         );
 
         return $objectUrl;
@@ -156,7 +156,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         );
 
         $objectUrl = $this->client->getObjectUrl(
-            $this->getBucket(), $path, $expiration->format('c'), $options
+            $this->getBucketWithAppId(), $path, $expiration->format('c'), $options
         );
 
         return $objectUrl;
@@ -173,7 +173,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     {
         $options = $this->prepareUploadConfig($config);
 
-        return $this->client->upload($this->getBucket(), $path, $contents, $options);
+        return $this->client->upload($this->getBucketWithAppId(), $path, $contents, $options);
     }
 
     /**
@@ -188,7 +188,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         $options = $this->prepareUploadConfig($config);
 
         return $this->client->upload(
-            $this->getBucket(),
+            $this->getBucketWithAppId(),
             $path,
             stream_get_contents($resource, -1, 0),
             $options
@@ -248,7 +248,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             'Key' => $this->getSourcePath($path),
         ];
 
-        return (bool) $this->client->copy($this->getBucket(), $newpath, $source);
+        return (bool) $this->client->copy($this->getBucketWithAppId(), $newpath, $source);
     }
 
     /**
@@ -259,7 +259,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     public function delete($path)
     {
         $result = $this->client->deleteObject([
-            'Bucket' => $this->getBucket(),
+            'Bucket' => $this->getBucketWithAppId(),
             'Key'    => $path,
         ]);
 
@@ -274,7 +274,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     public function deleteDir($dirname)
     {
         $result = $this->client->deleteObject([
-            'Bucket' => $this->getBucket(),
+            'Bucket' => $this->getBucketWithAppId(),
             'Key'    => $dirname.'/',
         ]);
 
@@ -290,7 +290,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     public function createDir($dirname, Config $config)
     {
         return $this->client->putObject([
-            'Bucket' => $this->getBucket(),
+            'Bucket' => $this->getBucketWithAppId(),
             'Key'    => $dirname.'/',
             'Body'   => '',
         ]);
@@ -305,7 +305,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     public function setVisibility($path, $visibility)
     {
         return (bool) $this->client->PutObjectAcl([
-            'Bucket' => $this->getBucket(),
+            'Bucket' => $this->getBucketWithAppId(),
             'Key'    => $path,
             'ACL'    => $this->normalizeVisibility($visibility),
         ]);
@@ -374,7 +374,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     protected function readFromSource($path)
     {
         $response = $this->client->getObject([
-            'Bucket' => $this->getBucket(),
+            'Bucket' => $this->getBucketWithAppId(),
             'Key'    => $path,
         ]);
 
@@ -449,9 +449,9 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     {
         try {
             return $this->client->headObject([
-                'Bucket' => $this->getBucket(),
+                'Bucket' => $this->getBucketWithAppId(),
                 'Key'    => $path,
-            ])->toArray();
+            ]);
         } catch (ServiceResponseException $e) {
             return false;
         }
@@ -505,7 +505,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     {
         try {
             $meta = $this->client->getObjectAcl([
-                'Bucket' => $this->getBucket(),
+                'Bucket' => $this->getBucketWithAppId(),
                 'Key'    => $path,
             ]);
 
@@ -555,13 +555,17 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     private function listObjects($directory = '', $recursive = false, $marker = '')
     {
-        return $this->client->listObjects([
-            'Bucket'    => $this->getBucket(),
-            'Prefix'    => ((string) $directory === '') ? '' : ($directory.'/'),
-            'Delimiter' => $recursive ? '' : '/',
-            'Marker'    => $marker,
-            'MaxKeys'   => 1000,
-        ]);
+        try {
+            return $this->client->listObjects([
+                'Bucket'    => $this->getBucketWithAppId(),
+                'Prefix'    => ((string) $directory === '') ? '' : ($directory.'/'),
+                'Delimiter' => $recursive ? '' : '/',
+                'Marker'    => $marker,
+                'MaxKeys'   => 1000,
+            ]);
+        } catch (ServiceResponseException $e) {
+            return new \GuzzleHttp\Command\Result([]);
+        }
     }
 
     /**
