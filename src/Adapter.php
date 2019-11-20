@@ -244,7 +244,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     {
         $source = [
             'Region' => $this->getRegion(),
-            'Bucket' => $this->getBucket(),
+            'Bucket' => $this->getBucketWithAppId(),
             'Key' => $this->getSourcePath($path),
         ];
 
