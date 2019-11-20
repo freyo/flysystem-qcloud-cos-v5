@@ -68,6 +68,8 @@ class CDNSignatureTest extends TestCase
      */
     public function testSignatureB(Filesystem $filesystem)
     {
+        date_default_timezone_set("UTC");
+
         $this->assertSame(
             'http://www.test.com/201801230400/8eee4e932f285743fa23c79030139459/1.mp4',
             $filesystem->cdn()->signatureB('http://www.test.com/1.mp4', null, 1516680000)
