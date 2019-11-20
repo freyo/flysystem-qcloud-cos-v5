@@ -34,7 +34,7 @@ class GetFederationToken extends AbstractPlugin
     {
         $policy = !is_null($customPolicy)
             ? $this->getCustomPolicy($customPolicy, $path)
-            : $this->getPolicy($path);
+            : $this->getDefaultPolicy($path);
 
         $params = [
             'durationSeconds' => $seconds,
@@ -65,7 +65,7 @@ class GetFederationToken extends AbstractPlugin
      *
      * @return string
      */
-    protected function getPolicy($path)
+    protected function getDefaultPolicy($path)
     {
         $appId = $this->getCredentials()['appId'];
 
