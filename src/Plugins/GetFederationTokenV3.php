@@ -26,10 +26,10 @@ class GetFederationTokenV3 extends AbstractPlugin
     /**
      * @see https://cloud.tencent.com/document/product/598/33416
      *
-     * @param string $path
-     * @param int $seconds
+     * @param string  $path
+     * @param int     $seconds
      * @param Closure $customPolicy
-     * @param string $name
+     * @param string  $name
      *
      * @return bool|array
      */
@@ -41,8 +41,8 @@ class GetFederationTokenV3 extends AbstractPlugin
 
         $params = [
             'DurationSeconds' => $seconds,
-            'Name' => $name,
-            'Policy' => urlencode($policy),
+            'Name'            => $name,
+            'Policy'          => urlencode($policy),
         ];
 
         return $this->request(
@@ -80,7 +80,7 @@ class GetFederationTokenV3 extends AbstractPlugin
         $bucket = $this->getConfig()->get('bucket');
 
         $policy = [
-            'version' => '2.0',
+            'version'   => '2.0',
             'statement' => [
                 'action' => [
                     // 简单上传
@@ -93,7 +93,7 @@ class GetFederationTokenV3 extends AbstractPlugin
                     'name/cos:CompleteMultipartUpload',
                     'name/cos:AbortMultipartUpload',
                 ],
-                'effect' => 'allow',
+                'effect'   => 'allow',
                 'resource' => [
                     "qcs::cos:$region:uid/$appId:prefix//$appId/$bucket/$path",
                 ],

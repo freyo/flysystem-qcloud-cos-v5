@@ -9,7 +9,7 @@ use League\Flysystem\Adapter\CanOverwriteFiles;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
 use Qcloud\Cos\Client;
-use Qcloud\Cos\Exception\NoSuchKeyException;
+use Qcloud\Cos\Exception\ServiceResponseException;
 
 /**
  * Class Adapter.
@@ -134,11 +134,12 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             'Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http',
         ];
 
+        /** @var \GuzzleHttp\Psr7\Uri $objectUrl */
         $objectUrl = $this->client->getObjectUrl(
-            $this->getBucket(), $path, null, $options
+            $this->getBucketWithAppId(), $path, null, $options
         );
 
-        return $objectUrl;
+        return (string) $objectUrl;
     }
 
     /**
@@ -155,11 +156,12 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             ['Scheme' => isset($this->config['scheme']) ? $this->config['scheme'] : 'http']
         );
 
+        /** @var \GuzzleHttp\Psr7\Uri $objectUrl */
         $objectUrl = $this->client->getObjectUrl(
-            $this->getBucket(), $path, $expiration->format('c'), $options
+            $this->getBucketWithAppId(), $path, $expiration->format('c'), $options
         );
 
-        return $objectUrl;
+        return (string) $objectUrl;
     }
 
     /**
@@ -171,9 +173,16 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function write($path, $contents, Config $config)
     {
-        $options = $this->prepareUploadConfig($config);
-
-        return $this->client->upload($this->getBucket(), $path, $contents, $options);
+        try {
+            return $this->client->upload(
+                $this->getBucketWithAppId(),
+                $path,
+                $contents,
+                $this->prepareUploadConfig($config)
+            );
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -185,14 +194,16 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function writeStream($path, $resource, Config $config)
     {
-        $options = $this->prepareUploadConfig($config);
-
-        return $this->client->upload(
-            $this->getBucket(),
-            $path,
-            stream_get_contents($resource, -1, 0),
-            $options
-        );
+        try {
+            return $this->client->upload(
+                $this->getBucketWithAppId(),
+                $path,
+                stream_get_contents($resource, -1, 0),
+                $this->prepareUploadConfig($config)
+            );
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -227,11 +238,15 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function rename($path, $newpath)
     {
-        $result = $this->copy($path, $newpath);
+        try {
+            if ($result = $this->copy($path, $newpath)) {
+                $this->delete($path);
+            }
 
-        $this->delete($path);
-
-        return $result;
+            return $result;
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -242,9 +257,15 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function copy($path, $newpath)
     {
-        $source = $this->getSourcePath($path);
-
-        return (bool) $this->client->copy($this->getBucket(), $newpath, $source);
+        try {
+            return (bool) $this->client->copyObject([
+                'Bucket'     => $this->getBucketWithAppId(),
+                'Key'        => $newpath,
+                'CopySource' => $this->getSourcePath($path),
+            ]);
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -254,12 +275,14 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function delete($path)
     {
-        $result = $this->client->deleteObject([
-            'Bucket' => $this->getBucket(),
-            'Key'    => $path,
-        ]);
-
-        return (bool) $result;
+        try {
+            return (bool) $this->client->deleteObject([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $path,
+            ]);
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -269,12 +292,14 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function deleteDir($dirname)
     {
-        $result = $this->client->deleteObject([
-            'Bucket' => $this->getBucket(),
-            'Key'    => $dirname.'/',
-        ]);
-
-        return (bool) $result;
+        try {
+            return (bool) $this->client->deleteObject([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $dirname.'/',
+            ]);
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -285,11 +310,15 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function createDir($dirname, Config $config)
     {
-        return $this->client->putObject([
-            'Bucket' => $this->getBucket(),
-            'Key'    => $dirname.'/',
-            'Body'   => '',
-        ]);
+        try {
+            return $this->client->putObject([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $dirname.'/',
+                'Body'   => '',
+            ]);
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -300,11 +329,15 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function setVisibility($path, $visibility)
     {
-        return (bool) $this->client->PutObjectAcl([
-            'Bucket' => $this->getBucket(),
-            'Key'    => $path,
-            'ACL'    => $this->normalizeVisibility($visibility),
-        ]);
+        try {
+            return (bool) $this->client->putObjectAcl([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $path,
+                'ACL'    => $this->normalizeVisibility($visibility),
+            ]);
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -316,7 +349,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     {
         try {
             return (bool) $this->getMetadata($path);
-        } catch (NoSuchKeyException $e) {
+        } catch (ServiceResponseException $e) {
             return false;
         }
     }
@@ -334,9 +367,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
                 : $this->readFromSource($path);
 
             return ['contents' => (string) $response];
-        } catch (NoSuchKeyException $e) {
-            return false;
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (ServiceResponseException $e) {
             return false;
         }
     }
@@ -371,10 +402,16 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     protected function readFromSource($path)
     {
-        return $this->client->getObject([
-            'Bucket' => $this->getBucket(),
-            'Key'    => $path,
-        ])->get('Body');
+        try {
+            $response = $this->client->getObject([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $path,
+            ]);
+
+            return $response['Body'];
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -404,9 +441,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
                            ->detach();
 
             return ['stream' => $stream];
-        } catch (NoSuchKeyException $e) {
-            return false;
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (ServiceResponseException $e) {
             return false;
         }
     }
@@ -425,14 +460,14 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         while (true) {
             $response = $this->listObjects($directory, $recursive, $marker);
 
-            foreach ((array) $response->get('Contents') as $content) {
+            foreach ((array) $response['Contents'] as $content) {
                 $list[] = $this->normalizeFileInfo($content);
             }
 
-            if (!$response->get('IsTruncated')) {
+            if (!$response['IsTruncated']) {
                 break;
             }
-            $marker = $response->get('NextMarker') ?: '';
+            $marker = $response['NextMarker'] ?: '';
         }
 
         return $list;
@@ -445,10 +480,14 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getMetadata($path)
     {
-        return $this->client->headObject([
-            'Bucket' => $this->getBucket(),
-            'Key'    => $path,
-        ])->toArray();
+        try {
+            return $this->client->headObject([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $path,
+            ]);
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -497,21 +536,25 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getVisibility($path)
     {
-        $meta = $this->client->getObjectAcl([
-            'Bucket' => $this->getBucket(),
-            'Key'    => $path,
-        ]);
+        try {
+            $meta = $this->client->getObjectAcl([
+                'Bucket' => $this->getBucketWithAppId(),
+                'Key'    => $path,
+            ]);
 
-        foreach ($meta->get('Grants') as $grant) {
-            if (isset($grant['Grantee']['URI'])
-                && $grant['Permission'] === 'READ'
-                && strpos($grant['Grantee']['URI'], 'global/AllUsers') !== false
-            ) {
-                return ['visibility' => AdapterInterface::VISIBILITY_PUBLIC];
+            foreach ($meta['Grants'] as $grant) {
+                if (isset($grant['Grantee']['URI'])
+                    && $grant['Permission'] === 'READ'
+                    && strpos($grant['Grantee']['URI'], 'global/AllUsers') !== false
+                ) {
+                    return ['visibility' => AdapterInterface::VISIBILITY_PUBLIC];
+                }
             }
-        }
 
-        return ['visibility' => AdapterInterface::VISIBILITY_PRIVATE];
+            return ['visibility' => AdapterInterface::VISIBILITY_PRIVATE];
+        } catch (ServiceResponseException $e) {
+            return false;
+        }
     }
 
     /**
@@ -541,17 +584,25 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      * @param string $marker    max return 1000 record, if record greater than 1000
      *                          you should set the next marker to get the full list
      *
-     * @return mixed
+     * @return \GuzzleHttp\Command\Result|array
      */
     private function listObjects($directory = '', $recursive = false, $marker = '')
     {
-        return $this->client->listObjects([
-            'Bucket'    => $this->getBucket(),
-            'Prefix'    => ((string) $directory === '') ? '' : ($directory.'/'),
-            'Delimiter' => $recursive ? '' : '/',
-            'Marker'    => $marker,
-            'MaxKeys'   => 1000,
-        ]);
+        try {
+            return $this->client->listObjects([
+                'Bucket'    => $this->getBucketWithAppId(),
+                'Prefix'    => ((string) $directory === '') ? '' : ($directory.'/'),
+                'Delimiter' => $recursive ? '' : '/',
+                'Marker'    => $marker,
+                'MaxKeys'   => 1000,
+            ]);
+        } catch (ServiceResponseException $e) {
+            return [
+                'Contents'    => [],
+                'IsTruncated' => false,
+                'NextMarker'  => '',
+            ];
+        }
     }
 
     /**
@@ -610,7 +661,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getAuthorization($method, $url)
     {
-        $cosRequest = new \Guzzle\Http\Message\Request($method, $url);
+        $cosRequest = new \GuzzleHttp\Psr7\Request($method, $url);
 
         $signature = new \Qcloud\Cos\Signature(
             $this->config['credentials']['secretId'],
