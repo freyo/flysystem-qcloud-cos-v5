@@ -33,7 +33,7 @@
 ## Installation
 
   ```shell
-  composer require freyo/flysystem-qcloud-cos-v5
+  composer require "freyo/flysystem-qcloud-cos-v5:^2.0" -vvv
   ```
 
 ## Bootstrap
