@@ -21,10 +21,10 @@ trait TencentCloudAuthV3
     }
 
     /**
-     * @param array           $args
-     * @param string          $action
-     * @param string          $service
-     * @param string          $version
+     * @param array $args
+     * @param string $action
+     * @param string $service
+     * @param string $version
      * @param string|int|null $timestamp
      *
      * @return bool|array
@@ -34,17 +34,17 @@ trait TencentCloudAuthV3
         $client = $this->getHttpClient($service);
 
         $response = $client->post('/', [
-            'headers' => [
-                'X-TC-Action'    => $action,
-                'X-TC-Region'    => $this->getConfig()->get('region'),
-                'X-TC-Timestamp' => $timestamp = $timestamp ?: time(),
-                'X-TC-Version'   => $version,
-                'Authorization'  => $this->getAuthorization($args, $timestamp, $service),
-                'Content-Type'   => 'application/json',
-            ],
-            'body' => \GuzzleHttp\json_encode(
+            'body' => $body = \GuzzleHttp\json_encode(
                 $args, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
             ),
+            'headers' => [
+                'X-TC-Action' => $action,
+                'X-TC-Region' => $this->getConfig()->get('region'),
+                'X-TC-Timestamp' => $timestamp = $timestamp ?: time(),
+                'X-TC-Version' => $version,
+                'Authorization' => $this->getAuthorization($timestamp, $service, $body),
+                'Content-Type' => 'application/json',
+            ],
         ]);
 
         $contents = $response->getBody()->getContents();
@@ -53,6 +53,8 @@ trait TencentCloudAuthV3
     }
 
     /**
+     * @param $service
+     *
      * @return \GuzzleHttp\Client
      */
     protected function getHttpClient($service)
@@ -79,52 +81,53 @@ trait TencentCloudAuthV3
     }
 
     /**
-     * @param $args
-     * @param $timestamp
-     * @param $service
+     * @param string|int|null $timestamp
+     * @param string $service
+     * @param string $body
      *
      * @return string
      */
-    protected function getAuthorization($args, $timestamp, $service)
+    protected function getAuthorization($timestamp, $service, $body)
     {
         return sprintf(
             '%s Credential=%s/%s, SignedHeaders=%s, Signature=%s',
             'TC3-HMAC-SHA256',
             $this->getCredentials()['secretId'],
-            date('Y-m-d', $timestamp)."/{$service}/tc3_request",
+            date('Y-m-d', $timestamp) . "/{$service}/tc3_request",
             'content-type;host',
             hash_hmac(
                 'SHA256',
-                $this->getSignatureString($args, $timestamp, $service),
+                $this->getSignatureString($timestamp, $service, $body),
                 $this->getRequestKey($timestamp, $service)
             )
         );
     }
 
     /**
-     * @param $timestamp
-     * @param $service
+     * @param string|int|null $timestamp
+     * @param string $service
      *
      * @return string
      */
     protected function getRequestKey($timestamp, $service)
     {
-        return hash_hmac('SHA256', 'tc3_request',
-            hash_hmac('SHA256', $service,
-                hash_hmac('SHA256', date('Y-m-d', $timestamp),
-                    'TC3'.$this->getCredentials()['secretKey'], true
-                ), true
-            ), true
+        $secretDate = hash_hmac(
+            'SHA256',
+            date('Y-m-d', $timestamp),
+            'TC3' . $this->getCredentials()['secretKey'],
+            true
         );
+        $secretService = hash_hmac('SHA256', $service, $secretDate, true);
+        return hash_hmac('SHA256', 'tc3_request', $secretService, true);
     }
 
     /**
-     * @param $args
-     * @param $service
+     * @param string $service
+     * @param string $body
      *
      * @return string
      */
-    protected function getCanonicalRequest($args, $service)
+    protected function getCanonicalRequest($service, $body)
     {
         return implode("\n", [
             'POST',
@@ -134,26 +137,24 @@ trait TencentCloudAuthV3
             "host:{$service}.tencentcloudapi.com",
             '',
             'content-type;host',
-            hash('SHA256', \GuzzleHttp\json_encode(
-                $args, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-            )),
+            hash('SHA256', $body),
         ]);
     }
 
     /**
-     * @param $args
-     * @param $timestamp
-     * @param $service
+     * @param string|int|null $timestamp
+     * @param string $service
+     * @param string $body
      *
      * @return string
      */
-    protected function getSignatureString($args, $timestamp, $service)
+    protected function getSignatureString($timestamp, $service, $body)
     {
         return implode("\n", [
             'TC3-HMAC-SHA256',
             $timestamp,
-            date('Y-m-d', $timestamp)."/{$service}/tc3_request",
-            hash('SHA256', $this->getCanonicalRequest($args, $service)),
+            date('Y-m-d', $timestamp) . "/{$service}/tc3_request",
+            hash('SHA256', $this->getCanonicalRequest($service, $body)),
         ]);
     }
 }
