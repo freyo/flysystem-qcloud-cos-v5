@@ -21,10 +21,10 @@ trait TencentCloudAuthV3
     }
 
     /**
-     * @param array $args
-     * @param string $action
-     * @param string $service
-     * @param string $version
+     * @param array           $args
+     * @param string          $action
+     * @param string          $service
+     * @param string          $version
      * @param string|int|null $timestamp
      *
      * @return bool|array
@@ -38,12 +38,12 @@ trait TencentCloudAuthV3
                 $args, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
             ),
             'headers' => [
-                'X-TC-Action' => $action,
-                'X-TC-Region' => $this->getConfig()->get('region'),
+                'X-TC-Action'    => $action,
+                'X-TC-Region'    => $this->getConfig()->get('region'),
                 'X-TC-Timestamp' => $timestamp = $timestamp ?: time(),
-                'X-TC-Version' => $version,
-                'Authorization' => $this->getAuthorization($timestamp, $service, $body),
-                'Content-Type' => 'application/json',
+                'X-TC-Version'   => $version,
+                'Authorization'  => $this->getAuthorization($timestamp, $service, $body),
+                'Content-Type'   => 'application/json',
             ],
         ]);
 
@@ -82,8 +82,8 @@ trait TencentCloudAuthV3
 
     /**
      * @param string|int|null $timestamp
-     * @param string $service
-     * @param string $body
+     * @param string          $service
+     * @param string          $body
      *
      * @return string
      */
@@ -93,7 +93,7 @@ trait TencentCloudAuthV3
             '%s Credential=%s/%s, SignedHeaders=%s, Signature=%s',
             'TC3-HMAC-SHA256',
             $this->getCredentials()['secretId'],
-            date('Y-m-d', $timestamp) . "/{$service}/tc3_request",
+            date('Y-m-d', $timestamp)."/{$service}/tc3_request",
             'content-type;host',
             hash_hmac(
                 'SHA256',
@@ -105,7 +105,7 @@ trait TencentCloudAuthV3
 
     /**
      * @param string|int|null $timestamp
-     * @param string $service
+     * @param string          $service
      *
      * @return string
      */
@@ -114,10 +114,11 @@ trait TencentCloudAuthV3
         $secretDate = hash_hmac(
             'SHA256',
             date('Y-m-d', $timestamp),
-            'TC3' . $this->getCredentials()['secretKey'],
+            'TC3'.$this->getCredentials()['secretKey'],
             true
         );
         $secretService = hash_hmac('SHA256', $service, $secretDate, true);
+
         return hash_hmac('SHA256', 'tc3_request', $secretService, true);
     }
 
@@ -143,8 +144,8 @@ trait TencentCloudAuthV3
 
     /**
      * @param string|int|null $timestamp
-     * @param string $service
-     * @param string $body
+     * @param string          $service
+     * @param string          $body
      *
      * @return string
      */
@@ -153,7 +154,7 @@ trait TencentCloudAuthV3
         return implode("\n", [
             'TC3-HMAC-SHA256',
             $timestamp,
-            date('Y-m-d', $timestamp) . "/{$service}/tc3_request",
+            date('Y-m-d', $timestamp)."/{$service}/tc3_request",
             hash('SHA256', $this->getCanonicalRequest($service, $body)),
         ]);
     }

@@ -49,10 +49,10 @@ class TCaptchaV3 extends AbstractPlugin
     public function verify($ticket, $randStr, $userIP, array $options = [])
     {
         $params = array_merge([
-            'CaptchaType' => 9,
-            'Ticket' => $ticket,
-            'UserIp' => $userIP,
-            'Randstr' => $randStr,
+            'CaptchaType'  => 9,
+            'Ticket'       => $ticket,
+            'UserIp'       => $userIP,
+            'Randstr'      => $randStr,
             'CaptchaAppId' => $this->aid,
             'AppSecretKey' => $this->appSecretKey,
         ], $options);
