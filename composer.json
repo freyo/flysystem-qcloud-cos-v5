@@ -11,9 +11,9 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "php": ">=5.5.0",
-        "phpunit/phpunit": "~4.8"
-    },	
+        "phpunit/phpunit": "~4.8",
+        "monolog/monolog": "^2.0"
+    },
     "autoload": {
         "psr-4": {
             "Freyo\\Flysystem\\QcloudCOSv5\\": "src/"
