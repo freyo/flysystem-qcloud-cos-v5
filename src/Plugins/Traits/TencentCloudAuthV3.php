@@ -2,6 +2,8 @@
 
 namespace Freyo\Flysystem\QcloudCOSv5\Plugins\Traits;
 
+use Carbon\Carbon;
+
 trait TencentCloudAuthV3
 {
     /**
@@ -93,7 +95,7 @@ trait TencentCloudAuthV3
             '%s Credential=%s/%s, SignedHeaders=%s, Signature=%s',
             'TC3-HMAC-SHA256',
             $this->getCredentials()['secretId'],
-            date('Y-m-d', $timestamp)."/{$service}/tc3_request",
+            Carbon::createFromTimestampUTC($timestamp)->toDateString()."/{$service}/tc3_request",
             'content-type;host',
             hash_hmac(
                 'SHA256',
@@ -113,7 +115,7 @@ trait TencentCloudAuthV3
     {
         $secretDate = hash_hmac(
             'SHA256',
-            date('Y-m-d', $timestamp),
+            Carbon::createFromTimestampUTC($timestamp)->toDateString(),
             'TC3'.$this->getCredentials()['secretKey'],
             true
         );
@@ -154,7 +156,7 @@ trait TencentCloudAuthV3
         return implode("\n", [
             'TC3-HMAC-SHA256',
             $timestamp,
-            date('Y-m-d', $timestamp)."/{$service}/tc3_request",
+            Carbon::createFromTimestampUTC($timestamp)->toDateString()."/{$service}/tc3_request",
             hash('SHA256', $this->getCanonicalRequest($service, $body)),
         ]);
     }
