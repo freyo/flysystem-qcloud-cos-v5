@@ -95,7 +95,7 @@ class GetFederationTokenV3 extends AbstractPlugin
                 ],
                 'effect'   => 'allow',
                 'resource' => [
-                    "qcs::cos:$region:uid/$appId:prefix//$appId/$bucket/$path",
+                    "qcs::cos:$region:uid/$appId:$bucket-$appId/$path",
                 ],
             ],
         ];
