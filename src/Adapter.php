@@ -136,7 +136,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
 
         /** @var \GuzzleHttp\Psr7\Uri $objectUrl */
         $objectUrl = $this->client->getObjectUrl(
-            $this->getBucketWithAppId(), $path, null, $options
+            $this->getBucketWithAppId(), $path, "+30 minutes", $options
         );
 
         return (string) $objectUrl;
