@@ -79,7 +79,11 @@ class CDN extends AbstractPlugin
 
         return sprintf(
             '%s://%s/%s/%s%s',
-            $parsed['scheme'], $parsed['host'], $timestamp, $hash, $parsed['path']
+            $parsed['scheme'],
+            $parsed['host'],
+            $timestamp,
+            $hash,
+            $parsed['path']
         );
     }
 
@@ -100,7 +104,11 @@ class CDN extends AbstractPlugin
 
         return sprintf(
             '%s://%s/%s/%s%s',
-            $parsed['scheme'], $parsed['host'], $hash, $timestamp, $parsed['path']
+            $parsed['scheme'],
+            $parsed['host'],
+            $hash,
+            $timestamp,
+            $parsed['path']
         );
     }
 

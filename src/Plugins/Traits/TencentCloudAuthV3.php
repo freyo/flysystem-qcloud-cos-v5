@@ -37,7 +37,8 @@ trait TencentCloudAuthV3
 
         $response = $client->post('/', [
             'body' => $body = \GuzzleHttp\json_encode(
-                $args, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+                $args,
+                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
             ),
             'headers' => [
                 'X-TC-Action'    => $action,

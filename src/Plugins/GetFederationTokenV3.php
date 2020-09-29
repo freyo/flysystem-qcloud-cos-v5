@@ -46,7 +46,10 @@ class GetFederationTokenV3 extends AbstractPlugin
         ];
 
         return $this->request(
-            $params, 'GetFederationToken', 'sts', '2018-08-13'
+            $params,
+            'GetFederationToken',
+            'sts',
+            '2018-08-13'
         );
     }
 
@@ -61,7 +64,8 @@ class GetFederationTokenV3 extends AbstractPlugin
         $policy = call_user_func($callable, $path, $this->getConfig());
 
         return \GuzzleHttp\json_encode(
-            $policy, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+            $policy,
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
         );
     }
 
@@ -101,7 +105,8 @@ class GetFederationTokenV3 extends AbstractPlugin
         ];
 
         return \GuzzleHttp\json_encode(
-            $policy, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+            $policy,
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
         );
     }
 }

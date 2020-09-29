@@ -58,7 +58,10 @@ class TCaptchaV3 extends AbstractPlugin
         ], $options);
 
         return $this->request(
-            $params, 'DescribeCaptchaResult', 'captcha', '2019-07-22'
+            $params,
+            'DescribeCaptchaResult',
+            'captcha',
+            '2019-07-22'
         );
     }
 }

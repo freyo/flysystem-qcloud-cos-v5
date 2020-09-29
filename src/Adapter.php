@@ -102,8 +102,11 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getSourcePath($path)
     {
-        return sprintf('%s.cos.%s.myqcloud.com/%s',
-            $this->getBucketWithAppId(), $this->getRegion(), $path
+        return sprintf(
+            '%s.cos.%s.myqcloud.com/%s',
+            $this->getBucketWithAppId(),
+            $this->getRegion(),
+            $path
         );
     }
 
@@ -114,8 +117,11 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function getPicturePath($path)
     {
-        return sprintf('%s.pic.%s.myqcloud.com/%s',
-            $this->getBucketWithAppId(), $this->getRegion(), $path
+        return sprintf(
+            '%s.pic.%s.myqcloud.com/%s',
+            $this->getBucketWithAppId(),
+            $this->getRegion(),
+            $path
         );
     }
 
@@ -136,7 +142,10 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
 
         /** @var \GuzzleHttp\Psr7\Uri $objectUrl */
         $objectUrl = $this->client->getObjectUrl(
-            $this->getBucketWithAppId(), $path, "+30 minutes", $options
+            $this->getBucketWithAppId(),
+            $path,
+            '+30 minutes',
+            $options
         );
 
         return (string) $objectUrl;
@@ -158,7 +167,10 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
 
         /** @var \GuzzleHttp\Psr7\Uri $objectUrl */
         $objectUrl = $this->client->getObjectUrl(
-            $this->getBucketWithAppId(), $path, $expiration->format('c'), $options
+            $this->getBucketWithAppId(),
+            $path,
+            $expiration->format('c'),
+            $options
         );
 
         return (string) $objectUrl;
