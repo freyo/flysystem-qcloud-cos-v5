@@ -40,7 +40,10 @@ class FaceId extends AbstractPlugin
         ]);
 
         return $this->request(
-            $params, 'DetectAuth', 'faceid', '2018-03-01'
+            $params,
+            'DetectAuth',
+            'faceid',
+            '2018-03-01'
         );
     }
 
@@ -60,7 +63,10 @@ class FaceId extends AbstractPlugin
         ];
 
         return $this->request(
-            $params, 'GetDetectInfo', 'faceid', '2018-03-01'
+            $params,
+            'GetDetectInfo',
+            'faceid',
+            '2018-03-01'
         );
     }
 }

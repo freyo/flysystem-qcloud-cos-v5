@@ -132,7 +132,8 @@ class AdapterTest extends TestCase
     public function testCreateDir(AdapterInterface $adapter, $config, $options)
     {
         $this->assertTrue((bool) $adapter->createDir(
-            "bar/{$options['machineId']}", new Config()
+            "bar/{$options['machineId']}",
+            new Config()
         ));
     }
 
@@ -150,7 +151,8 @@ class AdapterTest extends TestCase
     public function testSetVisibility(AdapterInterface $adapter, $config, $options)
     {
         $this->assertTrue($adapter->setVisibility(
-            "foo/{$options['machineId']}/copy.md", 'private'
+            "foo/{$options['machineId']}/copy.md",
+            'private'
         ));
     }
 
@@ -174,7 +176,8 @@ class AdapterTest extends TestCase
 
         $this->assertSame(
             file_get_contents($adapter->getTemporaryUrl(
-                "foo/{$options['machineId']}/bar.md", Carbon::now()->addMinutes(5)
+                "foo/{$options['machineId']}/bar.md",
+                Carbon::now()->addMinutes(5)
             )),
             $adapter->read("foo/{$options['machineId']}/bar.md")['contents']
         );
@@ -203,10 +206,13 @@ class AdapterTest extends TestCase
 
         $this->assertSame(
             stream_get_contents(fopen($adapter->getTemporaryUrl(
-                "foo/{$options['machineId']}/bar.md", Carbon::now()->addMinutes(5)
+                "foo/{$options['machineId']}/bar.md",
+                Carbon::now()->addMinutes(5)
             ), 'rb', false)),
-            stream_get_contents($adapter->readStream(
-                "foo/{$options['machineId']}/bar.md")['stream']
+            stream_get_contents(
+                $adapter->readStream(
+                "foo/{$options['machineId']}/bar.md"
+            )['stream']
             )
         );
     }

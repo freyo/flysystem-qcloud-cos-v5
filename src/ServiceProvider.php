@@ -57,7 +57,8 @@ class ServiceProvider extends LaravelServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/filesystems.php', 'filesystems'
+            __DIR__.'/filesystems.php',
+            'filesystems'
         );
     }
 }

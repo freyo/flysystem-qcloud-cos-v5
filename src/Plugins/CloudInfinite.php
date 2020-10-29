@@ -42,7 +42,8 @@ class CloudInfinite extends AbstractPlugin
             'headers'     => [
                 'Authorization'  => $adapter->getAuthorization('POST', $url),
                 'Pic-Operations' => \GuzzleHttp\json_encode(
-                    $picOperations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                    $picOperations,
+                    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                 ),
             ],
         ]);
@@ -69,7 +70,8 @@ class CloudInfinite extends AbstractPlugin
             'headers'     => [
                 'Authorization'       => $adapter->getAuthorization('GET', $url),
                 'Content-Recognition' => \GuzzleHttp\json_encode(
-                    $contentRecognition, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                    $contentRecognition,
+                    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                 ),
             ],
         ]);
