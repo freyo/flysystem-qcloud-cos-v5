@@ -32,6 +32,8 @@
 
 ## Installation
 
+  > Laravel 8 use [overtrue/qcloud-cos-client](https://github.com/overtrue/qcloud-cos-client)
+
   ```shell
   composer require "freyo/flysystem-qcloud-cos-v5:^2.0" -vvv
   ```
