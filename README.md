@@ -32,7 +32,7 @@
 
 ## Installation
 
-  > Laravel 8 use [overtrue/qcloud-cos-client](https://github.com/overtrue/qcloud-cos-client)
+  > Support Laravel/Lumen 5.x/6.x/7.x/8.x
 
   ```shell
   composer require "freyo/flysystem-qcloud-cos-v5:^2.0" -vvv
@@ -267,11 +267,11 @@ $disk->cloudInfinite()->imageProcess($objectKey, array $picOperations);
 $disk->cloudInfinite()->contentRecognition($objectKey, array $contentRecognition);
 ```
 
-[Full API documentation.](https://laravel.com/api/5.8/Illuminate/Contracts/Filesystem/Cloud.html)
+[Full API documentation.](https://laravel.com/api/8.x/Illuminate/Contracts/Filesystem/Cloud.html)
 
 ## Regions & Endpoints
 
-[Official Documentation](https://intl.cloud.tencent.com/document/product/436/6224)
+[Official Documentation](https://intl.cloud.tencent.com/document/product/436/6224?lang=en)
 
 ## License
 
