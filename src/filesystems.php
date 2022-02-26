@@ -76,7 +76,7 @@ return [
             'connect_timeout'    => env('COSV5_CONNECT_TIMEOUT', 60),
             'bucket'             => env('COSV5_BUCKET'),
             'cdn'                => env('COSV5_CDN'),
-            'scheme'             => env('COSV5_SCHEME', 'https'),
+            'schema'             => env('COSV5_SCHEME', 'https'),
             'read_from_cdn'      => env('COSV5_READ_FROM_CDN', false),
             'cdn_key'            => env('COSV5_CDN_KEY'),
             'encrypt'            => env('COSV5_ENCRYPT', false),
