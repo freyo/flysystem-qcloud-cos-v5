@@ -4,7 +4,7 @@
     "keywords": ["flysystem-adapter", "qcloud-sdk", "qcloud", "qcloud-cos"],
     "require": {
         "php": ">=5.5.0",
-        "league/flysystem": "~1.0",
+        "league/flysystem": "^1.0 || ^2.0 || ^3.0",
         "guzzlehttp/guzzle": "~6.0 || ^7.0",
         "qcloud/cos-sdk-v5": "^2.0 || dev-guzzle7",
         "nesbot/carbon": "~1.0 || ^2.0",
